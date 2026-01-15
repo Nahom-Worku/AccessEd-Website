@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - AccessEd</title>
+    <meta name="description" content="Verify your AccessEd email address">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Preload fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7C3AED;
+            --primary-dark: #6D28D9;
+            --primary-light: #A78BFA;
+            --success: #10B981;
+            --success-bg: #D1FAE5;
+            --error: #EF4444;
+            --error-bg: #FEE2E2;
+            --warning: #F59E0B;
+            --warning-bg: #FEF3C7;
+            --text: #1F2937;
+            --text-secondary: #6B7280;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 32px;
+            letter-spacing: -0.5px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 40px 32px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .icon svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .icon-success {
+            background: var(--success-bg);
+        }
+
+        .icon-success svg {
+            color: var(--success);
+        }
+
+        .icon-error {
+            background: var(--error-bg);
+        }
+
+        .icon-error svg {
+            color: var(--error);
+        }
+
+        .icon-loading {
+            background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%);
+        }
+
+        .icon-loading svg {
+            color: var(--primary);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .message {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+        }
+
+        .benefits {
+            background: #F3F4F6;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 28px;
+            text-align: left;
+        }
+
+        .benefits-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .benefit-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .benefit-item svg {
+            width: 16px;
+            height: 16px;
+            color: var(--success);
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: #F5F3FF;
+        }
+
+        .btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .error-code {
+            display: inline-block;
+            background: var(--error-bg);
+            color: var(--error);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .help-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 24px;
+        }
+
+        .help-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .help-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading state */
+        .state {
+            display: none;
+        }
+
+        .state.active {
+            display: block;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 32px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .card {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .icon {
+                width: 64px;
+                height: 64px;
+            }
+
+            .icon svg {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">AccessEd</div>
+
+        <div class="card">
+            <!-- Loading State -->
+            <div id="state-loading" class="state active">
+                <div class="icon icon-loading">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                </div>
+                <h1>Verifying your email...</h1>
+                <p class="message">Please wait a moment.</p>
+            </div>
+
+            <!-- Success State -->
+            <div id="state-success" class="state">
+                <div class="icon icon-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h1>Email Verified!</h1>
+                <p class="message">Your email has been verified successfully. You now have access to all Member benefits.</p>
+
+                <div class="benefits">
+                    <div class="benefits-title">What you've unlocked:</div>
+                    <div class="benefit-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Upload up to 5 documents per week</span>
+                    </div>
+                    <div class="benefit-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>100 AI questions per week</span>
+                    </div>
+                    <div class="benefit-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>10 quizzes per week</span>
+                    </div>
+                    <div class="benefit-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Your progress is saved permanently</span>
+                    </div>
+                </div>
+
+                <a href="#" class="btn btn-primary" id="open-app-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    Return to App
+                </a>
+
+                <p class="help-text">You can close this page and return to the AccessEd app.</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="state-error" class="state">
+                <div class="icon icon-error">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </div>
+                <h1 id="error-title">Verification Failed</h1>
+                <span class="error-code" id="error-code"></span>
+                <p class="message" id="error-message">Something went wrong with your verification link.</p>
+
+                <button class="btn btn-primary" id="resend-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Request New Verification Email
+                </button>
+
+                <p class="help-text">
+                    Need help? <a href="mailto:support@accessed.app">Contact Support</a>
+                </p>
+            </div>
+
+            <!-- Already Verified State -->
+            <div id="state-already-verified" class="state">
+                <div class="icon icon-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h1>Already Verified</h1>
+                <p class="message">Good news! Your email was already verified. You're all set to use AccessEd.</p>
+
+                <a href="#" class="btn btn-primary" id="open-app-btn-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    Return to App
+                </a>
+
+                <p class="help-text">You can close this page and return to the AccessEd app.</p>
+            </div>
+
+            <!-- No Params State (direct visit without query params) -->
+            <div id="state-no-params" class="state">
+                <div class="icon icon-loading">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <h1>Email Verification</h1>
+                <p class="message">To verify your email, click the verification link we sent to your inbox. Check your spam folder if you don't see it.</p>
+
+                <a href="#" class="btn btn-primary" id="open-app-btn-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    Return to App
+                </a>
+
+                <p class="help-text">
+                    Need help? <a href="mailto:support@accessed.app">Contact Support</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="footer">
+            &copy; 2025 AccessEd. All rights reserved.
+        </div>
+    </div>
+
+    <script>
+        // Error message mapping for user-friendly display
+        const errorMessages = {
+            'Invalid verification link': {
+                title: 'Invalid Link',
+                message: 'This verification link is invalid. It may have been copied incorrectly. Please check your email and try again.',
+                showResend: true
+            },
+            'This link has already been used': {
+                title: 'Link Already Used',
+                message: 'This verification link has already been used. Your email should already be verified.',
+                showResend: false,
+                redirectToAlreadyVerified: true
+            },
+            'This link has expired': {
+                title: 'Link Expired',
+                message: 'This verification link has expired. Verification links are valid for 24 hours. Request a new one from the app.',
+                showResend: true
+            },
+            'Email already verified': {
+                title: 'Already Verified',
+                message: 'Your email is already verified. You\'re all set!',
+                showResend: false,
+                redirectToAlreadyVerified: true
+            },
+            'server': {
+                title: 'Server Error',
+                message: 'Something went wrong on our end. Please try again later or contact support if the problem persists.',
+                showResend: true
+            }
+        };
+
+        function showState(stateId) {
+            document.querySelectorAll('.state').forEach(el => el.classList.remove('active'));
+            document.getElementById(stateId).classList.add('active');
+        }
+
+        function handleVerification() {
+            const params = new URLSearchParams(window.location.search);
+            const success = params.get('success');
+            const error = params.get('error');
+
+            // Small delay to show loading state (feels more intentional)
+            setTimeout(() => {
+                if (success === 'true') {
+                    showState('state-success');
+                } else if (error) {
+                    const errorInfo = errorMessages[error] || errorMessages['server'];
+
+                    if (errorInfo.redirectToAlreadyVerified) {
+                        showState('state-already-verified');
+                    } else {
+                        document.getElementById('error-title').textContent = errorInfo.title;
+                        document.getElementById('error-code').textContent = error;
+                        document.getElementById('error-message').textContent = errorInfo.message;
+                        document.getElementById('resend-btn').style.display = errorInfo.showResend ? 'flex' : 'none';
+                        showState('state-error');
+                    }
+                } else {
+                    // No params - user navigated directly to /verify
+                    showState('state-no-params');
+                }
+            }, 500);
+        }
+
+        // Handle "Return to App" buttons - close window or go to homepage
+        function handleReturnToApp(e) {
+            e.preventDefault();
+            // Try to close the window (works if opened by a link)
+            window.close();
+            // If window.close() doesn't work (not opened by script), redirect to home
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 100);
+        }
+
+        // Handle resend button - redirect to app to request new email
+        function handleResend(e) {
+            e.preventDefault();
+            // For now, just show an alert. In a full implementation, this could:
+            // 1. Deep link to the app's resend flow
+            // 2. Or show a form to enter email
+            alert('Please open the AccessEd app and request a new verification email from Settings.');
+        }
+
+        // Attach event listeners
+        document.getElementById('open-app-btn').addEventListener('click', handleReturnToApp);
+        document.getElementById('open-app-btn-2').addEventListener('click', handleReturnToApp);
+        document.getElementById('open-app-btn-3').addEventListener('click', handleReturnToApp);
+        document.getElementById('resend-btn').addEventListener('click', handleResend);
+
+        // Run on page load
+        handleVerification();
+    </script>
+</body>
+</html>
