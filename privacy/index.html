@@ -243,7 +243,7 @@
 
     <main class="container">
         <h1>Privacy Policy</h1>
-        <p class="last-updated">Last updated: January 14, 2025</p>
+        <p class="last-updated">Last updated: January 17, 2026</p>
 
         <div class="summary-box">
             <h2>Privacy Summary</h2>
@@ -274,8 +274,10 @@
         <h3>2.2 Information Collected Automatically</h3>
         <p>When you use our Service, we automatically collect:</p>
         <ul>
-            <li><strong>Usage Data:</strong> Features used, session duration, and learning progress</li>
+            <li><strong>Device Identifier:</strong> A unique anonymous ID generated when you first install the app, used to identify your device</li>
+            <li><strong>Usage Data:</strong> Features used, session duration, questions asked, quizzes completed, and learning progress</li>
             <li><strong>Device Information:</strong> Device type, operating system version, and app version</li>
+            <li><strong>IP Address:</strong> Logged when you sign in for security purposes</li>
             <li><strong>Technical Data:</strong> Error logs and performance data to improve the Service</li>
         </ul>
 
@@ -314,6 +316,16 @@
                     <td>Document content, questions you ask</td>
                 </tr>
                 <tr>
+                    <td>OpenAI</td>
+                    <td>Document embeddings and AI features</td>
+                    <td>Document content, questions you ask</td>
+                </tr>
+                <tr>
+                    <td>Groq</td>
+                    <td>AI-powered learning features</td>
+                    <td>Document content, questions you ask</td>
+                </tr>
+                <tr>
                     <td>Resend</td>
                     <td>Transactional emails</td>
                     <td>Email address, name</td>
@@ -338,7 +350,36 @@
 
         <p>We do not sell your personal information to third parties. We do not use third-party advertising or tracking services.</p>
 
-        <h2>5. Data Retention</h2>
+        <h3>4.1 On-Device AI Processing</h3>
+        <p>On supported devices (iOS 26 and later), AccessEd uses <strong>Apple Foundation Models</strong> to provide offline AI features. This processing happens entirely on your device:</p>
+        <ul>
+            <li>Offline chat responses to your questions</li>
+            <li>Quiz generation from your study materials</li>
+            <li>Flashcard generation from your documents</li>
+        </ul>
+        <p>When using on-device AI, your data is not sent to any external servers. All processing occurs locally on your iPhone or iPad.</p>
+
+        <h2>5. Local Data Storage</h2>
+        <p>The AccessEd app stores data locally on your device:</p>
+        <ul>
+            <li><strong>Keychain (Secure Storage):</strong> Authentication tokens and credentials are stored in the iOS Keychain, Apple's secure storage system</li>
+            <li><strong>Local Database:</strong> Chat history, quiz results, and saved questions are stored locally using Apple's SwiftData framework</li>
+            <li><strong>Preferences:</strong> Your notification settings, course colors, and app preferences are stored in UserDefaults</li>
+            <li><strong>Offline Documents:</strong> Downloaded study materials for offline access</li>
+        </ul>
+        <p>Local data remains on your device and is deleted when you uninstall the app or delete your account.</p>
+
+        <h2>6. Notifications</h2>
+        <p>With your permission, AccessEd sends local push notifications to help you stay on track:</p>
+        <ul>
+            <li>Daily study reminders</li>
+            <li>Learning streak alerts</li>
+            <li>Weekly progress summaries</li>
+            <li>Topic review reminders when knowledge may be fading</li>
+        </ul>
+        <p>You can customize or disable notifications at any time in the app settings or your device's Settings app.</p>
+
+        <h2>7. Data Retention</h2>
         <p>How long we keep your data depends on your account type:</p>
 
         <table>
@@ -366,7 +407,7 @@
 
         <p>When you delete your account, we permanently delete all your personal data, documents, learning progress, and associated content within 30 days.</p>
 
-        <h2>6. Data Security</h2>
+        <h2>8. Data Security</h2>
         <p>We implement industry-standard security measures to protect your data:</p>
         <ul>
             <li>Passwords are hashed using bcrypt (never stored in plain text)</li>
@@ -376,9 +417,9 @@
         </ul>
         <p>While we strive to protect your personal information, no method of transmission or storage is 100% secure. We cannot guarantee absolute security.</p>
 
-        <h2>7. Your Rights and Choices</h2>
+        <h2>9. Your Rights and Choices</h2>
 
-        <h3>7.1 All Users</h3>
+        <h3>9.1 All Users</h3>
         <p>You have the right to:</p>
         <ul>
             <li><strong>Access:</strong> Request a copy of your personal data</li>
@@ -387,7 +428,7 @@
             <li><strong>Portability:</strong> Request your data in a portable format</li>
         </ul>
 
-        <h3>7.2 European Users (GDPR)</h3>
+        <h3>9.2 European Users (GDPR)</h3>
         <p>If you are in the European Economic Area, you have additional rights under GDPR:</p>
         <ul>
             <li>Right to restrict processing of your data</li>
@@ -396,7 +437,7 @@
         </ul>
         <p>Our legal basis for processing your data is: (a) your consent, (b) performance of our contract with you, and (c) our legitimate interests in operating and improving the Service.</p>
 
-        <h3>7.3 California Residents (CCPA)</h3>
+        <h3>9.3 California Residents (CCPA)</h3>
         <p>California residents have the right to:</p>
         <ul>
             <li>Know what personal information we collect and how it is used</li>
@@ -405,16 +446,16 @@
             <li>Non-discrimination for exercising your privacy rights</li>
         </ul>
 
-        <h3>7.4 Canadian Users (PIPEDA)</h3>
+        <h3>9.4 Canadian Users (PIPEDA)</h3>
         <p>Under Canada's Personal Information Protection and Electronic Documents Act, you have the right to access, correct, and challenge the accuracy of your personal information. Contact us to exercise these rights.</p>
 
-        <h2>8. Children's Privacy</h2>
+        <h2>10. Children's Privacy</h2>
         <p>AccessEd is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If you are a parent or guardian and believe your child has provided us with personal information, please contact us immediately. If we discover we have collected information from a child under 13, we will delete it promptly.</p>
 
-        <h2>9. International Data Transfers</h2>
+        <h2>11. International Data Transfers</h2>
         <p>Your information may be transferred to and processed in countries other than Canada, including the United States, where our service providers are located. These countries may have different data protection laws. By using our Service, you consent to such transfers. We ensure appropriate safeguards are in place to protect your data.</p>
 
-        <h2>10. Changes to This Policy</h2>
+        <h2>12. Changes to This Policy</h2>
         <p>We may update this Privacy Policy from time to time. We will notify you of any material changes by:</p>
         <ul>
             <li>Posting the new policy on this page with an updated "Last updated" date</li>
@@ -422,7 +463,7 @@
         </ul>
         <p>Your continued use of the Service after changes constitutes acceptance of the updated policy.</p>
 
-        <h2>11. Contact Us</h2>
+        <h2>13. Contact Us</h2>
         <div class="contact-box">
             <h3>Questions or Concerns?</h3>
             <p>If you have any questions about this Privacy Policy or our data practices, please contact us:</p>
@@ -435,7 +476,7 @@
     </main>
 
     <footer class="footer">
-        <p>&copy; 2025 AccessEd. All rights reserved.</p>
+        <p>&copy; 2026 AccessEd. All rights reserved.</p>
         <p style="margin-top: 8px;">
             <a href="/terms">Terms of Service</a> &middot;
             <a href="/privacy">Privacy Policy</a>
