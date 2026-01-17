@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - AccessEd</title>
+    <meta name="description" content="AccessEd Privacy Policy - How we collect, use, and protect your personal information.">
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7C3AED;
+            --primary-dark: #6D28D9;
+            --text: #1F2937;
+            --text-secondary: #4B5563;
+            --text-light: #6B7280;
+            --bg: #FFFFFF;
+            --bg-gray: #F9FAFB;
+            --border: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .header {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .back-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .last-updated {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 40px;
+        }
+
+        .summary-box {
+            background: var(--bg-gray);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .summary-box h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .summary-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .summary-box li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+
+        ul, ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 15px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg-gray);
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        td {
+            color: var(--text-secondary);
+        }
+
+        .contact-box {
+            background: var(--bg-gray);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+
+        .contact-box h3 {
+            margin-top: 0;
+        }
+
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 24px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .container {
+                padding: 32px 20px 60px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">AccessEd</a>
+            <a href="/" class="back-link">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Privacy Policy</h1>
+        <p class="last-updated">Last updated: January 14, 2025</p>
+
+        <div class="summary-box">
+            <h2>Privacy Summary</h2>
+            <ul>
+                <li>We collect your email and name to provide the service</li>
+                <li>Your documents are processed by AI to help you learn</li>
+                <li>We do not sell your personal data to third parties</li>
+                <li>Free trial data is automatically deleted after 48 hours</li>
+                <li>You can delete your account and all data at any time</li>
+            </ul>
+        </div>
+
+        <h2>1. Introduction</h2>
+        <p>AccessEd ("we", "our", or "us") is operated by Nahom Worku, based in Toronto, Ontario, Canada. This Privacy Policy explains how we collect, use, disclose, and protect your personal information when you use our mobile application and related services (collectively, the "Service").</p>
+        <p>By using AccessEd, you agree to the collection and use of information in accordance with this policy. If you do not agree with this policy, please do not use our Service.</p>
+
+        <h2>2. Information We Collect</h2>
+
+        <h3>2.1 Information You Provide</h3>
+        <p>When you create an account or use our Service, we collect:</p>
+        <ul>
+            <li><strong>Account Information:</strong> Email address, username, and optionally your name</li>
+            <li><strong>Authentication Data:</strong> Encrypted password (if using email sign-up), or authentication tokens from Google or Apple Sign-In</li>
+            <li><strong>Documents:</strong> PDF files and other documents you upload for learning</li>
+            <li><strong>Learning Data:</strong> Quiz responses, flashcard progress, and interaction history with the AI tutor</li>
+        </ul>
+
+        <h3>2.2 Information Collected Automatically</h3>
+        <p>When you use our Service, we automatically collect:</p>
+        <ul>
+            <li><strong>Usage Data:</strong> Features used, session duration, and learning progress</li>
+            <li><strong>Device Information:</strong> Device type, operating system version, and app version</li>
+            <li><strong>Technical Data:</strong> Error logs and performance data to improve the Service</li>
+        </ul>
+
+        <h3>2.3 Information from Third-Party Sign-In</h3>
+        <p>If you sign in using Google or Apple:</p>
+        <ul>
+            <li><strong>Google Sign-In:</strong> We receive your email address and name from your Google account</li>
+            <li><strong>Apple Sign-In:</strong> We receive your email address (or Apple's private relay email) and optionally your name. Apple only shares your name on the first sign-in</li>
+        </ul>
+
+        <h2>3. How We Use Your Information</h2>
+        <p>We use your information to:</p>
+        <ul>
+            <li><strong>Provide the Service:</strong> Process your documents, generate quizzes, create flashcards, and power the AI tutor</li>
+            <li><strong>Personalize Learning:</strong> Track your progress and adapt content to your knowledge level</li>
+            <li><strong>Communicate:</strong> Send verification emails, password resets, and important service updates</li>
+            <li><strong>Improve the Service:</strong> Analyze usage patterns to fix bugs and develop new features</li>
+            <li><strong>Process Payments:</strong> Manage subscriptions through Apple's App Store</li>
+        </ul>
+
+        <h2>4. Third-Party Services</h2>
+        <p>We use the following third-party services to provide our Service:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Purpose</th>
+                    <th>Data Shared</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Google AI (Gemini)</td>
+                    <td>AI-powered learning features</td>
+                    <td>Document content, questions you ask</td>
+                </tr>
+                <tr>
+                    <td>Resend</td>
+                    <td>Transactional emails</td>
+                    <td>Email address, name</td>
+                </tr>
+                <tr>
+                    <td>Apple App Store</td>
+                    <td>Payment processing</td>
+                    <td>Transaction data (managed by Apple)</td>
+                </tr>
+                <tr>
+                    <td>Google OAuth</td>
+                    <td>Sign-in authentication</td>
+                    <td>Authentication tokens</td>
+                </tr>
+                <tr>
+                    <td>Apple Sign-In</td>
+                    <td>Sign-in authentication</td>
+                    <td>Authentication tokens</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>We do not sell your personal information to third parties. We do not use third-party advertising or tracking services.</p>
+
+        <h2>5. Data Retention</h2>
+        <p>How long we keep your data depends on your account type:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Account Type</th>
+                    <th>Retention Period</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Explorer (Free Trial)</td>
+                    <td>48 hours - all learning data automatically deleted after trial expires</td>
+                </tr>
+                <tr>
+                    <td>Member (Verified Free)</td>
+                    <td>Until you delete your account</td>
+                </tr>
+                <tr>
+                    <td>Pro (Subscription)</td>
+                    <td>Until you delete your account or cancel subscription</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>When you delete your account, we permanently delete all your personal data, documents, learning progress, and associated content within 30 days.</p>
+
+        <h2>6. Data Security</h2>
+        <p>We implement industry-standard security measures to protect your data:</p>
+        <ul>
+            <li>Passwords are hashed using bcrypt (never stored in plain text)</li>
+            <li>All data transmitted using TLS/HTTPS encryption</li>
+            <li>Access controls and authentication for all systems</li>
+            <li>Regular security reviews and updates</li>
+        </ul>
+        <p>While we strive to protect your personal information, no method of transmission or storage is 100% secure. We cannot guarantee absolute security.</p>
+
+        <h2>7. Your Rights and Choices</h2>
+
+        <h3>7.1 All Users</h3>
+        <p>You have the right to:</p>
+        <ul>
+            <li><strong>Access:</strong> Request a copy of your personal data</li>
+            <li><strong>Correction:</strong> Update or correct inaccurate information</li>
+            <li><strong>Deletion:</strong> Delete your account and all associated data through the app settings</li>
+            <li><strong>Portability:</strong> Request your data in a portable format</li>
+        </ul>
+
+        <h3>7.2 European Users (GDPR)</h3>
+        <p>If you are in the European Economic Area, you have additional rights under GDPR:</p>
+        <ul>
+            <li>Right to restrict processing of your data</li>
+            <li>Right to object to processing based on legitimate interests</li>
+            <li>Right to lodge a complaint with your local data protection authority</li>
+        </ul>
+        <p>Our legal basis for processing your data is: (a) your consent, (b) performance of our contract with you, and (c) our legitimate interests in operating and improving the Service.</p>
+
+        <h3>7.3 California Residents (CCPA)</h3>
+        <p>California residents have the right to:</p>
+        <ul>
+            <li>Know what personal information we collect and how it is used</li>
+            <li>Request deletion of your personal information</li>
+            <li>Opt-out of the sale of personal information (we do not sell your data)</li>
+            <li>Non-discrimination for exercising your privacy rights</li>
+        </ul>
+
+        <h3>7.4 Canadian Users (PIPEDA)</h3>
+        <p>Under Canada's Personal Information Protection and Electronic Documents Act, you have the right to access, correct, and challenge the accuracy of your personal information. Contact us to exercise these rights.</p>
+
+        <h2>8. Children's Privacy</h2>
+        <p>AccessEd is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If you are a parent or guardian and believe your child has provided us with personal information, please contact us immediately. If we discover we have collected information from a child under 13, we will delete it promptly.</p>
+
+        <h2>9. International Data Transfers</h2>
+        <p>Your information may be transferred to and processed in countries other than Canada, including the United States, where our service providers are located. These countries may have different data protection laws. By using our Service, you consent to such transfers. We ensure appropriate safeguards are in place to protect your data.</p>
+
+        <h2>10. Changes to This Policy</h2>
+        <p>We may update this Privacy Policy from time to time. We will notify you of any material changes by:</p>
+        <ul>
+            <li>Posting the new policy on this page with an updated "Last updated" date</li>
+            <li>Sending you an email notification for significant changes</li>
+        </ul>
+        <p>Your continued use of the Service after changes constitutes acceptance of the updated policy.</p>
+
+        <h2>11. Contact Us</h2>
+        <div class="contact-box">
+            <h3>Questions or Concerns?</h3>
+            <p>If you have any questions about this Privacy Policy or our data practices, please contact us:</p>
+            <p>
+                <strong>Email:</strong> <a href="mailto:privacy@accessed.app">privacy@accessed.app</a><br>
+                <strong>Address:</strong> Toronto, Ontario, Canada
+            </p>
+            <p>We will respond to your inquiry within 30 days.</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 AccessEd. All rights reserved.</p>
+        <p style="margin-top: 8px;">
+            <a href="/terms">Terms of Service</a> &middot;
+            <a href="/privacy">Privacy Policy</a>
+        </p>
+    </footer>
+</body>
+</html>

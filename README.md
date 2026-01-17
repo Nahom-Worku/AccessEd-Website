@@ -6,6 +6,8 @@ Static website for AccessEd.app
 
 - `/` - Landing page (placeholder until app launches)
 - `/verify` - Email verification page (handles redirects from backend)
+- `/terms` - Terms of Service
+- `/privacy` - Privacy Policy
 
 ## Deployment
 

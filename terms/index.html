@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - AccessEd</title>
+    <meta name="description" content="AccessEd Terms of Service - Rules and guidelines for using our learning platform.">
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7C3AED;
+            --primary-dark: #6D28D9;
+            --text: #1F2937;
+            --text-secondary: #4B5563;
+            --text-light: #6B7280;
+            --bg: #FFFFFF;
+            --bg-gray: #F9FAFB;
+            --border: #E5E7EB;
+            --warning: #F59E0B;
+            --warning-bg: #FEF3C7;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .header {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .back-link {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .last-updated {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 40px;
+        }
+
+        .important-box {
+            background: var(--warning-bg);
+            border-left: 4px solid var(--warning);
+            border-radius: 0 12px 12px 0;
+            padding: 20px 24px;
+            margin-bottom: 40px;
+        }
+
+        .important-box p {
+            color: #92400E;
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .important-box strong {
+            color: #78350F;
+        }
+
+        .summary-box {
+            background: var(--bg-gray);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .summary-box h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .summary-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .summary-box li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+
+        ul, ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 15px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg-gray);
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        td {
+            color: var(--text-secondary);
+        }
+
+        .highlight-box {
+            background: #EDE9FE;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 24px 0;
+        }
+
+        .highlight-box p {
+            color: #5B21B6;
+            margin: 0;
+        }
+
+        .highlight-box strong {
+            color: #4C1D95;
+        }
+
+        .contact-box {
+            background: var(--bg-gray);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+
+        .contact-box h3 {
+            margin-top: 0;
+        }
+
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 24px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .container {
+                padding: 32px 20px 60px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">AccessEd</a>
+            <a href="/" class="back-link">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Terms of Service</h1>
+        <p class="last-updated">Last updated: January 14, 2025</p>
+
+        <div class="important-box">
+            <p><strong>Important:</strong> By using AccessEd, you agree to these Terms of Service. Please read them carefully. If you do not agree, do not use the Service.</p>
+        </div>
+
+        <div class="summary-box">
+            <h2>Key Points</h2>
+            <ul>
+                <li>You must be at least 13 years old to use AccessEd</li>
+                <li>Free trial (Explorer) data is deleted after 48 hours</li>
+                <li>Pro subscriptions auto-renew unless cancelled 24 hours before renewal</li>
+                <li>You own your documents; we use them only to provide the Service</li>
+                <li>AI-generated content is for educational support, not professional advice</li>
+            </ul>
+        </div>
+
+        <h2>1. Agreement to Terms</h2>
+        <p>These Terms of Service ("Terms") constitute a legally binding agreement between you and AccessEd, operated by Nahom Worku ("we", "us", or "our"), regarding your use of the AccessEd mobile application and related services (the "Service").</p>
+        <p>By creating an account or using the Service, you acknowledge that you have read, understood, and agree to be bound by these Terms and our <a href="/privacy">Privacy Policy</a>.</p>
+
+        <h2>2. Eligibility</h2>
+        <p>To use AccessEd, you must:</p>
+        <ul>
+            <li>Be at least <strong>13 years of age</strong></li>
+            <li>Have the legal capacity to enter into a binding agreement</li>
+            <li>Not be prohibited from using the Service under applicable law</li>
+        </ul>
+        <p>If you are between 13 and 18 years old (or the age of majority in your jurisdiction), you must have permission from a parent or legal guardian to use the Service.</p>
+
+        <h2>3. Account Registration</h2>
+        <p>To access certain features, you must create an account. You agree to:</p>
+        <ul>
+            <li>Provide accurate and complete information during registration</li>
+            <li>Keep your account credentials secure and confidential</li>
+            <li>Notify us immediately of any unauthorized access to your account</li>
+            <li>Accept responsibility for all activities that occur under your account</li>
+        </ul>
+        <p>We reserve the right to suspend or terminate accounts that violate these Terms or appear to be fraudulent.</p>
+
+        <h2>4. Service Description and Tiers</h2>
+        <p>AccessEd is an AI-powered learning platform that helps you study your documents through quizzes, flashcards, and an AI tutor. We offer the following tiers:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Tier</th>
+                    <th>Description</th>
+                    <th>Limitations</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Explorer</strong> (Free Trial)</td>
+                    <td>48-hour trial period</td>
+                    <td>1 document, 15 questions, 3 quizzes. All data deleted after 48 hours.</td>
+                </tr>
+                <tr>
+                    <td><strong>Member</strong> (Free)</td>
+                    <td>Email-verified free account</td>
+                    <td>5 documents/week, 100 questions/week, 10 quizzes/week</td>
+                </tr>
+                <tr>
+                    <td><strong>Pro</strong> (Paid)</td>
+                    <td>Premium subscription</td>
+                    <td>Unlimited documents, questions, quizzes, and flashcards</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>We reserve the right to modify tier features, pricing, and limitations at any time with reasonable notice to users.</p>
+
+        <h2>5. Subscriptions and Payments</h2>
+
+        <h3>5.1 Subscription Terms</h3>
+        <p>Pro subscriptions are billed through Apple's App Store using your Apple ID. By subscribing, you agree to Apple's terms and conditions for in-app purchases.</p>
+
+        <div class="highlight-box">
+            <p><strong>Auto-Renewal:</strong> Your subscription will automatically renew at the end of each billing period unless you cancel at least 24 hours before the renewal date. You will be charged through your Apple ID account.</p>
+        </div>
+
+        <h3>5.2 Cancellation</h3>
+        <p>To cancel your subscription:</p>
+        <ol>
+            <li>Open the Settings app on your iPhone</li>
+            <li>Tap your name at the top</li>
+            <li>Tap "Subscriptions"</li>
+            <li>Select AccessEd and tap "Cancel Subscription"</li>
+        </ol>
+        <p>Cancellation takes effect at the end of your current billing period. You will retain access to Pro features until then.</p>
+
+        <h3>5.3 Refunds</h3>
+        <p>Refund requests are handled by Apple according to their refund policy. To request a refund, visit <a href="https://reportaproblem.apple.com" target="_blank" rel="noopener">reportaproblem.apple.com</a>.</p>
+
+        <h3>5.4 Price Changes</h3>
+        <p>We may change subscription prices at any time. Price changes will apply to subsequent billing periods after notice is provided. Continuing to use the Service after a price change constitutes acceptance of the new price.</p>
+
+        <h2>6. Your Content</h2>
+
+        <h3>6.1 Ownership</h3>
+        <p>You retain ownership of all documents, text, and other content you upload to AccessEd ("Your Content"). We do not claim ownership of Your Content.</p>
+
+        <h3>6.2 License to Us</h3>
+        <p>By uploading Your Content, you grant us a limited, non-exclusive license to:</p>
+        <ul>
+            <li>Process and analyze Your Content to provide the Service (AI tutoring, quizzes, flashcards)</li>
+            <li>Store Your Content on our servers</li>
+            <li>Display Your Content back to you within the app</li>
+        </ul>
+        <p>This license exists solely to operate and improve the Service. We do not use Your Content to train AI models or share it with third parties except as described in our <a href="/privacy">Privacy Policy</a>.</p>
+
+        <h3>6.3 Content Restrictions</h3>
+        <p>You agree not to upload content that:</p>
+        <ul>
+            <li>Infringes on intellectual property rights of others</li>
+            <li>Contains malware, viruses, or harmful code</li>
+            <li>Is illegal, defamatory, or promotes violence or hate</li>
+            <li>Violates any third party's privacy rights</li>
+            <li>Contains sensitive personal information of others</li>
+        </ul>
+        <p>We reserve the right to remove content that violates these restrictions without notice.</p>
+
+        <h2>7. Acceptable Use</h2>
+        <p>You agree to use AccessEd only for lawful purposes. You will not:</p>
+        <ul>
+            <li>Attempt to gain unauthorized access to our systems or other users' accounts</li>
+            <li>Use automated scripts, bots, or scrapers to access the Service</li>
+            <li>Circumvent usage limits or security measures</li>
+            <li>Interfere with or disrupt the Service or servers</li>
+            <li>Use the Service to develop competing products</li>
+            <li>Resell, redistribute, or sublicense access to the Service</li>
+            <li>Impersonate any person or entity</li>
+        </ul>
+
+        <h2>8. AI-Generated Content Disclaimer</h2>
+        <div class="important-box">
+            <p><strong>Educational Tool Only:</strong> AccessEd uses artificial intelligence to generate quizzes, flashcards, explanations, and tutoring responses. This AI-generated content is provided for educational support purposes only and should not be relied upon as professional, medical, legal, or financial advice.</p>
+        </div>
+        <p>While we strive for accuracy, AI-generated content may contain errors, inaccuracies, or outdated information. You should:</p>
+        <ul>
+            <li>Verify important information with authoritative sources</li>
+            <li>Use AI responses as a learning aid, not as definitive answers</li>
+            <li>Consult qualified professionals for professional advice</li>
+        </ul>
+        <p>We are not responsible for decisions made based on AI-generated content.</p>
+
+        <h2>9. Intellectual Property</h2>
+        <p>The AccessEd name, logo, app design, and underlying technology are owned by us and protected by intellectual property laws. You may not copy, modify, distribute, or create derivative works based on our intellectual property without written permission.</p>
+
+        <h2>10. Limitation of Liability</h2>
+        <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW:</p>
+        <ul>
+            <li>THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED</li>
+            <li>WE DO NOT WARRANT THAT THE SERVICE WILL BE UNINTERRUPTED, ERROR-FREE, OR SECURE</li>
+            <li>WE ARE NOT LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES</li>
+            <li>OUR TOTAL LIABILITY SHALL NOT EXCEED THE AMOUNT YOU PAID US IN THE PAST 12 MONTHS, OR $100 CAD, WHICHEVER IS GREATER</li>
+        </ul>
+        <p>Some jurisdictions do not allow the exclusion of certain warranties or limitation of liability, so these limitations may not apply to you.</p>
+
+        <h2>11. Indemnification</h2>
+        <p>You agree to indemnify and hold harmless AccessEd and its operator from any claims, damages, losses, or expenses (including legal fees) arising from:</p>
+        <ul>
+            <li>Your use of the Service</li>
+            <li>Your Content</li>
+            <li>Your violation of these Terms</li>
+            <li>Your violation of any third-party rights</li>
+        </ul>
+
+        <h2>12. Termination</h2>
+
+        <h3>12.1 By You</h3>
+        <p>You may delete your account at any time through the app settings. Upon deletion, all your data will be permanently removed within 30 days.</p>
+
+        <h3>12.2 By Us</h3>
+        <p>We may suspend or terminate your access to the Service at any time, with or without cause, with or without notice. Reasons for termination may include:</p>
+        <ul>
+            <li>Violation of these Terms</li>
+            <li>Fraudulent or illegal activity</li>
+            <li>Extended period of inactivity</li>
+            <li>Discontinuation of the Service</li>
+        </ul>
+
+        <h3>12.3 Effect of Termination</h3>
+        <p>Upon termination, your right to use the Service immediately ceases. Sections regarding intellectual property, limitation of liability, indemnification, and governing law survive termination.</p>
+
+        <h2>13. Changes to Terms</h2>
+        <p>We may modify these Terms at any time. We will notify you of material changes by:</p>
+        <ul>
+            <li>Posting the updated Terms with a new "Last updated" date</li>
+            <li>Sending an in-app notification or email for significant changes</li>
+        </ul>
+        <p>Your continued use of the Service after changes constitutes acceptance of the updated Terms. If you do not agree, you must stop using the Service.</p>
+
+        <h2>14. Governing Law and Disputes</h2>
+        <p>These Terms are governed by the laws of the Province of Ontario and the federal laws of Canada applicable therein, without regard to conflict of law principles.</p>
+        <p>Any disputes arising from these Terms or your use of the Service shall be resolved through:</p>
+        <ol>
+            <li><strong>Informal Resolution:</strong> Contact us first to attempt to resolve the dispute informally</li>
+            <li><strong>Mediation:</strong> If informal resolution fails, the dispute shall be submitted to mediation</li>
+            <li><strong>Courts:</strong> If mediation fails, disputes shall be resolved in the courts of Ontario, Canada</li>
+        </ol>
+        <p>You agree to waive any right to participate in class action lawsuits against AccessEd.</p>
+
+        <h2>15. General Provisions</h2>
+        <ul>
+            <li><strong>Entire Agreement:</strong> These Terms and our Privacy Policy constitute the entire agreement between you and AccessEd</li>
+            <li><strong>Severability:</strong> If any provision is found unenforceable, the remaining provisions remain in effect</li>
+            <li><strong>Waiver:</strong> Our failure to enforce any right does not waive future enforcement</li>
+            <li><strong>Assignment:</strong> You may not assign your rights under these Terms. We may assign our rights at any time</li>
+        </ul>
+
+        <h2>16. Contact Us</h2>
+        <div class="contact-box">
+            <h3>Questions About These Terms?</h3>
+            <p>If you have questions about these Terms of Service, please contact us:</p>
+            <p>
+                <strong>Email:</strong> <a href="mailto:support@accessed.app">support@accessed.app</a><br>
+                <strong>Address:</strong> Toronto, Ontario, Canada
+            </p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 AccessEd. All rights reserved.</p>
+        <p style="margin-top: 8px;">
+            <a href="/terms">Terms of Service</a> &middot;
+            <a href="/privacy">Privacy Policy</a>
+        </p>
+    </footer>
+</body>
+</html>
