@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password - AccessEd</title>
+    <meta name="description" content="Reset your AccessEd password">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Preload fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7C3AED;
+            --primary-dark: #6D28D9;
+            --primary-light: #A78BFA;
+            --success: #10B981;
+            --success-bg: #D1FAE5;
+            --error: #EF4444;
+            --error-bg: #FEE2E2;
+            --warning: #F59E0B;
+            --warning-bg: #FEF3C7;
+            --text: #1F2937;
+            --text-secondary: #6B7280;
+            --bg: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --input-bg: #F3F4F6;
+            --input-border: #D1D5DB;
+            --input-focus: #7C3AED;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 32px;
+            letter-spacing: -0.5px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 40px 32px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .icon svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .icon-form {
+            background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%);
+        }
+
+        .icon-form svg {
+            color: var(--primary);
+        }
+
+        .icon-success {
+            background: var(--success-bg);
+        }
+
+        .icon-success svg {
+            color: var(--success);
+        }
+
+        .icon-error {
+            background: var(--error-bg);
+        }
+
+        .icon-error svg {
+            color: var(--error);
+        }
+
+        .icon-loading {
+            background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%);
+        }
+
+        .icon-loading svg {
+            color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .message {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 16px;
+            font-family: inherit;
+            border: 2px solid var(--input-border);
+            border-radius: 10px;
+            background: var(--card-bg);
+            color: var(--text);
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .form-input.error {
+            border-color: var(--error);
+        }
+
+        .form-input.error:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .form-hint {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .form-error {
+            font-size: 13px;
+            color: var(--error);
+            margin-top: 6px;
+            display: none;
+        }
+
+        .form-error.visible {
+            display: block;
+        }
+
+        .password-requirements {
+            background: var(--input-bg);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .requirement:last-child {
+            margin-bottom: 0;
+        }
+
+        .requirement svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .requirement.met {
+            color: var(--success);
+        }
+
+        .requirement.met svg {
+            color: var(--success);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .error-code {
+            display: inline-block;
+            background: var(--error-bg);
+            color: var(--error);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .help-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 24px;
+        }
+
+        .help-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .help-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* State management */
+        .state {
+            display: none;
+        }
+
+        .state.active {
+            display: block;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 32px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .card {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .icon {
+                width: 64px;
+                height: 64px;
+            }
+
+            .icon svg {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">AccessEd</div>
+
+        <div class="card">
+            <!-- Form State -->
+            <div id="state-form" class="state active">
+                <div class="icon icon-form">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                    </svg>
+                </div>
+                <h1>Create New Password</h1>
+                <p class="message">Enter a new password for your account.</p>
+
+                <form id="reset-form">
+                    <div class="form-group">
+                        <label for="password" class="form-label">New Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-input"
+                            placeholder="Enter new password"
+                            autocomplete="new-password"
+                            required
+                        >
+                        <p class="form-error" id="password-error"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password" class="form-label">Confirm Password</label>
+                        <input
+                            type="password"
+                            id="confirm-password"
+                            name="confirm-password"
+                            class="form-input"
+                            placeholder="Confirm new password"
+                            autocomplete="new-password"
+                            required
+                        >
+                        <p class="form-error" id="confirm-error"></p>
+                    </div>
+
+                    <div class="password-requirements">
+                        <div class="requirement" id="req-length">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                            </svg>
+                            <span>At least 8 characters</span>
+                        </div>
+                        <div class="requirement" id="req-match">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                            </svg>
+                            <span>Passwords match</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="submit-btn" disabled>
+                        Reset Password
+                    </button>
+                </form>
+
+                <p class="help-text">
+                    Remember your password? <a href="/">Return to app</a>
+                </p>
+            </div>
+
+            <!-- Loading State -->
+            <div id="state-loading" class="state">
+                <div class="icon icon-loading">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                </div>
+                <h1>Resetting Password...</h1>
+                <p class="message">Please wait a moment.</p>
+            </div>
+
+            <!-- Success State -->
+            <div id="state-success" class="state">
+                <div class="icon icon-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h1>Password Reset!</h1>
+                <p class="message">Your password has been successfully changed. You can now sign in with your new password.</p>
+
+                <a href="/" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    Return to App
+                </a>
+
+                <p class="help-text">You can close this page and sign in to the AccessEd app.</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="state-error" class="state">
+                <div class="icon icon-error">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </div>
+                <h1 id="error-title">Reset Failed</h1>
+                <span class="error-code" id="error-code"></span>
+                <p class="message" id="error-message">Something went wrong.</p>
+
+                <a href="/" class="btn btn-primary">
+                    Request New Reset Link
+                </a>
+
+                <p class="help-text">
+                    Need help? <a href="mailto:support@accessed.app">Contact Support</a>
+                </p>
+            </div>
+
+            <!-- No Token State -->
+            <div id="state-no-token" class="state">
+                <div class="icon icon-error">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h1>Invalid Link</h1>
+                <p class="message">This password reset link is invalid or missing. Please request a new password reset from the app.</p>
+
+                <a href="/" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                    Return to App
+                </a>
+
+                <p class="help-text">
+                    Need help? <a href="mailto:support@accessed.app">Contact Support</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 AccessEd. All rights reserved.</p>
+            <p style="margin-top: 8px;">
+                <a href="/terms">Terms</a> &middot;
+                <a href="/privacy">Privacy</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://api.accessed.app/api/v1';
+
+        // Error messages
+        const errorMessages = {
+            'Invalid or expired token': {
+                title: 'Link Expired',
+                message: 'This password reset link has expired or is invalid. Reset links are valid for 1 hour. Please request a new one from the app.'
+            },
+            'Token has already been used': {
+                title: 'Link Already Used',
+                message: 'This password reset link has already been used. If you need to reset your password again, please request a new link.'
+            },
+            'Password must be at least 8 characters': {
+                title: 'Password Too Short',
+                message: 'Your password must be at least 8 characters long. Please try again.'
+            },
+            'network': {
+                title: 'Connection Error',
+                message: 'Unable to connect to our servers. Please check your internet connection and try again.'
+            },
+            'server': {
+                title: 'Server Error',
+                message: 'Something went wrong on our end. Please try again later or contact support.'
+            }
+        };
+
+        // DOM elements
+        const passwordInput = document.getElementById('password');
+        const confirmInput = document.getElementById('confirm-password');
+        const submitBtn = document.getElementById('submit-btn');
+        const form = document.getElementById('reset-form');
+        const reqLength = document.getElementById('req-length');
+        const reqMatch = document.getElementById('req-match');
+
+        // Get token from URL
+        function getToken() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('token');
+        }
+
+        // Show state
+        function showState(stateId) {
+            document.querySelectorAll('.state').forEach(el => el.classList.remove('active'));
+            document.getElementById(stateId).classList.add('active');
+        }
+
+        // Update requirement indicator
+        function updateRequirement(element, met) {
+            if (met) {
+                element.classList.add('met');
+                element.querySelector('svg').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />';
+            } else {
+                element.classList.remove('met');
+                element.querySelector('svg').innerHTML = '<circle cx="12" cy="12" r="10" />';
+            }
+        }
+
+        // Validate form
+        function validateForm() {
+            const password = passwordInput.value;
+            const confirm = confirmInput.value;
+
+            const lengthMet = password.length >= 8;
+            const matchMet = password.length > 0 && password === confirm;
+
+            updateRequirement(reqLength, lengthMet);
+            updateRequirement(reqMatch, matchMet);
+
+            submitBtn.disabled = !(lengthMet && matchMet);
+
+            return lengthMet && matchMet;
+        }
+
+        // Show error
+        function showError(errorKey) {
+            const errorInfo = errorMessages[errorKey] || errorMessages['server'];
+            document.getElementById('error-title').textContent = errorInfo.title;
+            document.getElementById('error-code').textContent = errorKey;
+            document.getElementById('error-message').textContent = errorInfo.message;
+            showState('state-error');
+        }
+
+        // Submit form
+        async function handleSubmit(e) {
+            e.preventDefault();
+
+            if (!validateForm()) return;
+
+            const token = getToken();
+            const password = passwordInput.value;
+
+            showState('state-loading');
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/reset-password`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        token: token,
+                        new_password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showState('state-success');
+                } else {
+                    // Extract error message
+                    const errorMsg = data.detail || data.message || 'server';
+                    showError(errorMsg);
+                }
+            } catch (error) {
+                console.error('Reset error:', error);
+                showError('network');
+            }
+        }
+
+        // Initialize
+        function init() {
+            const token = getToken();
+
+            if (!token) {
+                showState('state-no-token');
+                return;
+            }
+
+            // Show form
+            showState('state-form');
+
+            // Add event listeners
+            passwordInput.addEventListener('input', validateForm);
+            confirmInput.addEventListener('input', validateForm);
+            form.addEventListener('submit', handleSubmit);
+
+            // Focus password field
+            passwordInput.focus();
+        }
+
+        // Run on load
+        init();
+    </script>
+</body>
+</html>
