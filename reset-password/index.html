@@ -662,8 +662,15 @@
                 if (response.ok) {
                     showState('state-success');
                 } else {
-                    // Extract error message
-                    const errorMsg = data.detail || data.message || 'server';
+                    // Extract error message - handle both string and object formats
+                    let errorMsg = 'server';
+                    if (typeof data.detail === 'string') {
+                        errorMsg = data.detail;
+                    } else if (data.detail?.message) {
+                        errorMsg = data.detail.message;
+                    } else if (data.message) {
+                        errorMsg = data.message;
+                    }
                     showError(errorMsg);
                 }
             } catch (error) {
