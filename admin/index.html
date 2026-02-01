@@ -639,7 +639,6 @@
                     <div class="announcement-content">
                         <div class="announcement-title">
                             <span class="type-badge type-${a.type}">${a.type}</span>
-                            <span class="status-dot ${a.is_active ? 'status-active' : 'status-inactive'}"></span>
                             ${a.title}
                         </div>
                         <div class="announcement-message">${a.message}</div>
@@ -650,9 +649,6 @@
                         </div>
                     </div>
                     <div class="announcement-actions">
-                        <button class="btn btn-secondary btn-small" onclick="toggleActive('${a.id}', ${!a.is_active})">
-                            ${a.is_active ? 'Deactivate' : 'Activate'}
-                        </button>
                         <button class="btn btn-danger btn-small" onclick="deleteAnnouncement('${a.id}')">
                             Delete
                         </button>
@@ -713,26 +709,6 @@
                 loadAnnouncements();
             } catch (error) {
                 showToast('Failed to delete announcement', 'error');
-            }
-        }
-
-        async function toggleActive(id, activate) {
-            try {
-                const response = await fetch(`${API_BASE}/admin/announcements/${id}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Admin-Key': adminKey
-                    },
-                    body: JSON.stringify({ is_active: activate })
-                });
-
-                if (!response.ok) throw new Error('Failed to update');
-
-                showToast(activate ? 'Announcement activated' : 'Announcement deactivated', 'success');
-                loadAnnouncements();
-            } catch (error) {
-                showToast('Failed to update announcement', 'error');
             }
         }
 
