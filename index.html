@@ -28,14 +28,16 @@
         }
 
         :root {
-            --primary: #7C3AED;
-            --primary-dark: #6D28D9;
-            --primary-light: #A78BFA;
-            --primary-bg: #F5F3FF;
-            --text: #1F2937;
+            --primary: #0D9488;
+            --primary-dark: #0F766E;
+            --primary-light: #14B8A6;
+            --primary-bg: #F0FDFA;
+            --text: #111111;
             --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
             --bg: #FFFFFF;
-            --bg-alt: #F9FAFB;
+            --bg-alt: #FAFAFA;
+            --border: #E5E7EB;
         }
 
         body {
@@ -76,7 +78,7 @@
             gap: 10px;
             font-size: 24px;
             font-weight: 800;
-            color: var(--primary);
+            color: var(--text);
             text-decoration: none;
         }
 
@@ -90,7 +92,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            background: var(--primary);
+            background: var(--text);
             color: white;
             padding: 10px 20px;
             border-radius: 10px;
@@ -101,7 +103,7 @@
         }
 
         .header-cta:hover {
-            background: var(--primary-dark);
+            background: #333;
             transform: translateY(-1px);
         }
 
@@ -114,15 +116,15 @@
         .hero {
             padding: 140px 0 80px;
             text-align: center;
-            background: linear-gradient(180deg, var(--primary-bg) 0%, var(--bg) 100%);
+            background: var(--bg);
         }
 
         .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: white;
-            border: 1px solid #E5E7EB;
+            background: var(--bg);
+            border: 1px solid var(--border);
             padding: 8px 16px;
             border-radius: 50px;
             font-size: 14px;
@@ -132,7 +134,7 @@
         }
 
         .hero-badge span {
-            background: #10B981;
+            background: var(--primary);
             color: white;
             padding: 2px 8px;
             border-radius: 20px;
@@ -145,11 +147,14 @@
             font-weight: 800;
             line-height: 1.1;
             margin-bottom: 20px;
-            letter-spacing: -1px;
+            letter-spacing: -2px;
         }
 
         .hero h1 .highlight {
-            color: var(--primary);
+            background: linear-gradient(135deg, var(--text-muted) 0%, #D1D5DB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .hero-subtitle {
@@ -163,7 +168,7 @@
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            background: var(--primary);
+            background: var(--text);
             color: white;
             padding: 18px 36px;
             border-radius: 14px;
@@ -171,13 +176,13 @@
             font-weight: 600;
             font-size: 18px;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
         }
 
         .hero-cta:hover {
-            background: var(--primary-dark);
+            background: #333;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         }
 
         .hero-cta svg {
@@ -231,7 +236,7 @@
 
         .feature-card {
             background: var(--bg);
-            border: 1px solid #E5E7EB;
+            border: 1px solid var(--border);
             border-radius: 20px;
             padding: 32px;
             transition: all 0.2s ease;
@@ -239,14 +244,14 @@
 
         .feature-card:hover {
             border-color: var(--primary-light);
-            box-shadow: 0 10px 40px -10px rgba(124, 58, 237, 0.2);
+            box-shadow: 0 10px 40px -10px rgba(13, 148, 136, 0.15);
             transform: translateY(-4px);
         }
 
         .feature-icon {
             width: 56px;
             height: 56px;
-            background: var(--primary-bg);
+            background: var(--bg-alt);
             border-radius: 16px;
             display: flex;
             align-items: center;
@@ -257,7 +262,7 @@
         .feature-icon svg {
             width: 28px;
             height: 28px;
-            color: var(--primary);
+            color: var(--text);
         }
 
         .feature-card h3 {
@@ -292,7 +297,7 @@
         .step-number {
             width: 48px;
             height: 48px;
-            background: var(--primary);
+            background: var(--text);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -321,7 +326,7 @@
         }
 
         .cta-box {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: var(--text);
             border-radius: 32px;
             padding: 80px 40px;
             color: white;
@@ -335,7 +340,7 @@
 
         .cta-box p {
             font-size: 18px;
-            opacity: 0.9;
+            opacity: 0.8;
             margin-bottom: 32px;
             max-width: 500px;
             margin-left: auto;
@@ -344,7 +349,7 @@
 
         .cta-box .hero-cta {
             background: white;
-            color: var(--primary);
+            color: var(--text);
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
         }
 
@@ -378,7 +383,7 @@
         }
 
         .footer-links a:hover {
-            color: var(--primary);
+            color: var(--text);
         }
 
         .footer-copy {
