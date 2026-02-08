@@ -686,7 +686,9 @@
 
         async function loadAnalytics() {
             try {
-                const response = await fetch(`${API_BASE}/admin/analytics?admin_key=${encodeURIComponent(adminKey)}`);
+                const response = await fetch(`${API_BASE}/admin/analytics`, {
+                    headers: { 'X-Admin-Key': adminKey }
+                });
 
                 if (response.status === 403) {
                     showToast('Invalid API key', 'error');
