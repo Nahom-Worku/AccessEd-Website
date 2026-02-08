@@ -91,6 +91,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
         }
 
         .logo {
@@ -102,6 +104,32 @@
         .logo span {
             font-weight: 400;
             color: var(--text-secondary);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .nav-link {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: white;
         }
 
         .btn {
@@ -424,7 +452,11 @@
     <div class="dashboard" id="dashboard">
         <header>
             <div class="logo">AccessEd <span>Admin</span></div>
-            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+            <div class="header-nav">
+                <a href="index.html" class="nav-link active">Announcements</a>
+                <a href="analytics.html" class="nav-link">Analytics</a>
+                <button class="btn btn-secondary btn-small" onclick="logout()">Logout</button>
+            </div>
         </header>
 
         <!-- Create Announcement -->

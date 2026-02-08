@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AccessEd Admin - User Analytics</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0D9488;
+            --primary-dark: #0F766E;
+            --primary-light: #14B8A6;
+            --text: #111111;
+            --text-secondary: #6B7280;
+            --bg: #FAFAFA;
+            --card-bg: #FFFFFF;
+            --border: #E5E7EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --info: #3B82F6;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        /* Auth Gate */
+        .auth-gate {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .auth-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .auth-card h1 {
+            font-size: 24px;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .auth-card p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .logo span {
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .nav-link {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: #D1D5DB;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .card-header h2 {
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        /* Two Column Grid */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table th {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background: #F9FAFB;
+        }
+
+        /* Status badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        .status-tried {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .status-inactive {
+            background: #F3F4F6;
+            color: #6B7280;
+        }
+
+        .tier-pro {
+            background: #DBEAFE;
+            color: #2563EB;
+        }
+
+        .tier-member {
+            background: #E0E7FF;
+            color: #4F46E5;
+        }
+
+        .tier-explorer {
+            background: #F3F4F6;
+            color: #6B7280;
+        }
+
+        /* Bar charts */
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bar-label {
+            width: 120px;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .bar-container {
+            flex: 1;
+            height: 24px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .bar-value {
+            width: 60px;
+            text-align: right;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--error); }
+
+        /* Pro list */
+        .pro-list {
+            list-style: none;
+        }
+
+        .pro-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pro-list li:last-child {
+            border-bottom: none;
+        }
+
+        .pro-email {
+            font-weight: 500;
+        }
+
+        .pro-date {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Signups chart */
+        .signups-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            height: 120px;
+            padding-top: 20px;
+        }
+
+        .signup-bar {
+            flex: 1;
+            background: var(--primary);
+            border-radius: 4px 4px 0 0;
+            min-height: 4px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .signup-bar:hover {
+            background: var(--primary-dark);
+        }
+
+        .signup-bar .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .signup-bar:hover .tooltip {
+            opacity: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        /* Scrollable table container */
+        .table-container {
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 768px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Gate -->
+    <div class="auth-gate" id="authGate">
+        <div class="auth-card">
+            <h1>AccessEd Admin</h1>
+            <p>Enter the admin API key to continue</p>
+            <div class="form-group">
+                <input type="password" id="apiKeyInput" placeholder="Admin API Key" autocomplete="off">
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="authenticate()">
+                Access Dashboard
+            </button>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <header>
+            <div class="logo">AccessEd <span>Admin</span></div>
+            <div class="header-nav">
+                <a href="index.html" class="nav-link">Announcements</a>
+                <a href="analytics.html" class="nav-link active">Analytics</a>
+                <button class="btn btn-secondary btn-small" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-value" id="statUsers">-</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statPro">-</div>
+                <div class="stat-label">Pro Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statNew">-</div>
+                <div class="stat-label">New (7 days)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statDocs">-</div>
+                <div class="stat-label">Documents</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statQuestions">-</div>
+                <div class="stat-label">Questions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statQuizzes">-</div>
+                <div class="stat-label">Quizzes</div>
+            </div>
+        </div>
+
+        <!-- Two column section -->
+        <div class="two-col">
+            <!-- Users by Tier -->
+            <div class="card">
+                <h2>Users by Tier</h2>
+                <div id="tierChart" class="bar-chart">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+
+            <!-- Signup Methods -->
+            <div class="card">
+                <h2>Signup Methods</h2>
+                <div id="signupMethodsChart" class="bar-chart">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Signups Chart -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Signups (Last 14 Days)</h2>
+                <button class="btn btn-secondary btn-small" onclick="loadAnalytics()">Refresh</button>
+            </div>
+            <div id="signupsChart" class="signups-chart">
+                <div class="loading"><div class="spinner"></div></div>
+            </div>
+        </div>
+
+        <!-- Two column section -->
+        <div class="two-col">
+            <!-- Pro Subscribers -->
+            <div class="card">
+                <h2>Pro Subscribers</h2>
+                <ul id="proList" class="pro-list">
+                    <div class="loading"><div class="spinner"></div></div>
+                </ul>
+            </div>
+
+            <!-- Engagement Breakdown -->
+            <div class="card">
+                <h2>Engagement Breakdown</h2>
+                <div id="engagementChart" class="bar-chart">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Activity Table -->
+        <div class="card">
+            <div class="card-header">
+                <h2>User Activity (Real Users)</h2>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Tier</th>
+                            <th>Type</th>
+                            <th>Joined</th>
+                            <th>Courses</th>
+                            <th>Docs</th>
+                            <th>Questions</th>
+                            <th>Quizzes</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr><td colspan="9" class="loading"><div class="spinner"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const API_BASE = 'https://accessed-api-gateway.onrender.com/api/v1';
+        let adminKey = '';
+
+        // Check for saved API key on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedKey = localStorage.getItem('accessedAdminKey');
+            if (savedKey) {
+                adminKey = savedKey;
+                showDashboard();
+            }
+
+            // Enter key to submit
+            document.getElementById('apiKeyInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') authenticate();
+            });
+        });
+
+        function authenticate() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            if (!key) {
+                showToast('Please enter the API key', 'error');
+                return;
+            }
+
+            adminKey = key;
+            localStorage.setItem('accessedAdminKey', key);
+            showDashboard();
+        }
+
+        function logout() {
+            adminKey = '';
+            localStorage.removeItem('accessedAdminKey');
+            document.getElementById('authGate').style.display = 'flex';
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('apiKeyInput').value = '';
+        }
+
+        function showDashboard() {
+            document.getElementById('authGate').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+            loadAnalytics();
+        }
+
+        async function loadAnalytics() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/analytics?admin_key=${encodeURIComponent(adminKey)}`);
+
+                if (response.status === 403) {
+                    showToast('Invalid API key', 'error');
+                    logout();
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.status !== 'success') {
+                    throw new Error('Failed to load analytics');
+                }
+
+                renderOverview(data.overview);
+                renderTierChart(data.users_by_tier);
+                renderSignupMethods(data.signup_methods);
+                renderSignupsChart(data.recent_signups);
+                renderProList(data.pro_subscribers);
+                renderEngagement(data.engagement_breakdown);
+                renderUsersTable(data.users_activity);
+
+            } catch (error) {
+                console.error('Failed to load analytics:', error);
+                showToast('Failed to load analytics', 'error');
+            }
+        }
+
+        function renderOverview(overview) {
+            document.getElementById('statUsers').textContent = overview.total_users;
+            document.getElementById('statPro').textContent = overview.pro_users;
+            document.getElementById('statNew').textContent = overview.new_users_7d;
+            document.getElementById('statDocs').textContent = overview.total_documents;
+            document.getElementById('statQuestions').textContent = overview.total_questions;
+            document.getElementById('statQuizzes').textContent = overview.total_quizzes;
+        }
+
+        function renderTierChart(tiers) {
+            const container = document.getElementById('tierChart');
+            const maxCount = Math.max(...tiers.map(t => t.count));
+
+            container.innerHTML = tiers.map(tier => `
+                <div class="bar-item">
+                    <div class="bar-label">${capitalize(tier.tier)}</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" style="width: ${(tier.count / maxCount) * 100}%"></div>
+                    </div>
+                    <div class="bar-value">${tier.count} (${tier.percentage}%)</div>
+                </div>
+            `).join('');
+        }
+
+        function renderSignupMethods(methods) {
+            const container = document.getElementById('signupMethodsChart');
+            const maxCount = Math.max(...methods.map(m => m.count));
+
+            container.innerHTML = methods.map(method => `
+                <div class="bar-item">
+                    <div class="bar-label">${method.method}</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" style="width: ${(method.count / maxCount) * 100}%"></div>
+                    </div>
+                    <div class="bar-value">${method.count}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderSignupsChart(signups) {
+            const container = document.getElementById('signupsChart');
+
+            if (signups.length === 0) {
+                container.innerHTML = '<div class="empty-state">No signups in the last 14 days</div>';
+                return;
+            }
+
+            // Sort by date ascending
+            signups.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            const maxSignups = Math.max(...signups.map(s => s.signups));
+
+            container.innerHTML = signups.map(signup => {
+                const height = Math.max(4, (signup.signups / maxSignups) * 100);
+                const date = new Date(signup.date);
+                const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                return `
+                    <div class="signup-bar" style="height: ${height}%">
+                        <div class="tooltip">${dateStr}: ${signup.signups} signups</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderProList(proUsers) {
+            const container = document.getElementById('proList');
+
+            if (proUsers.length === 0) {
+                container.innerHTML = '<li class="empty-state">No pro subscribers yet</li>';
+                return;
+            }
+
+            container.innerHTML = proUsers.map(user => `
+                <li>
+                    <span class="pro-email">${user.email}</span>
+                    <span class="pro-date">${formatDate(user.signup_date)}</span>
+                </li>
+            `).join('');
+        }
+
+        function renderEngagement(engagement) {
+            const container = document.getElementById('engagementChart');
+            const maxUsers = Math.max(...engagement.map(e => e.users));
+
+            const colors = {
+                'Active (5+ actions)': '#10B981',
+                'Tried (1-5 actions)': '#F59E0B',
+                'Inactive (0 actions)': '#9CA3AF'
+            };
+
+            container.innerHTML = engagement.map(e => `
+                <div class="bar-item">
+                    <div class="bar-label">${e.status.split(' ')[0]}</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" style="width: ${(e.users / maxUsers) * 100}%; background: ${colors[e.status] || 'var(--primary)'}"></div>
+                    </div>
+                    <div class="bar-value">${e.users} (${e.percentage}%)</div>
+                </div>
+            `).join('');
+        }
+
+        function renderUsersTable(users) {
+            const tbody = document.getElementById('usersTableBody');
+
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No user activity data</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.email}</td>
+                    <td><span class="status-badge tier-${user.tier}">${capitalize(user.tier)}</span></td>
+                    <td>${user.signup_type}</td>
+                    <td>${formatDate(user.joined)}</td>
+                    <td>${user.courses}</td>
+                    <td>${user.docs}</td>
+                    <td>${user.questions}</td>
+                    <td>${user.quizzes}</td>
+                    <td><span class="status-badge status-${user.status.toLowerCase()}">${user.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
