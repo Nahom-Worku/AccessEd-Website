@@ -490,6 +490,43 @@
             overflow-y: auto;
         }
 
+        /* Filter controls */
+        .filter-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--card-bg);
+            color: var(--text);
+            cursor: pointer;
+            min-width: 180px;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .filter-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .user-count {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-left: auto;
+        }
+
         @media (max-width: 768px) {
             .two-col {
                 grid-template-columns: 1fr;
@@ -613,6 +650,21 @@
         <div class="card">
             <div class="card-header">
                 <h2>User Activity (Real Users)</h2>
+                <div class="filter-controls">
+                    <span class="filter-label">Sort by:</span>
+                    <select class="filter-select" id="sortSelect" onchange="sortUsersTable()">
+                        <option value="joined-desc">Recently Joined</option>
+                        <option value="joined-asc">Oldest First</option>
+                        <option value="docs-desc">Most Documents</option>
+                        <option value="questions-desc">Most Questions</option>
+                        <option value="quizzes-desc">Most Quizzes</option>
+                        <option value="courses-desc">Most Courses</option>
+                        <option value="status-active">Active First</option>
+                        <option value="status-tried">Tried First</option>
+                        <option value="tier-pro">Pro Users First</option>
+                    </select>
+                    <span class="user-count" id="userCount"></span>
+                </div>
             </div>
             <div class="table-container">
                 <table class="data-table" id="usersTable">
@@ -643,6 +695,7 @@
     <script>
         const API_BASE = 'https://accessed-api-gateway.onrender.com/api/v1';
         let adminKey = '';
+        let usersData = []; // Store users for sorting
 
         // Check for saved API key on load
         document.addEventListener('DOMContentLoaded', () => {
@@ -818,14 +871,62 @@
         }
 
         function renderUsersTable(users) {
-            const tbody = document.getElementById('usersTableBody');
+            usersData = users; // Store for sorting
+            document.getElementById('userCount').textContent = `${users.length} users`;
+            sortUsersTable(); // Apply current sort
+        }
 
-            if (users.length === 0) {
+        function sortUsersTable() {
+            const tbody = document.getElementById('usersTableBody');
+            const sortBy = document.getElementById('sortSelect').value;
+
+            if (usersData.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No user activity data</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = users.map(user => `
+            let sortedUsers = [...usersData];
+
+            switch (sortBy) {
+                case 'joined-desc':
+                    sortedUsers.sort((a, b) => new Date(b.joined) - new Date(a.joined));
+                    break;
+                case 'joined-asc':
+                    sortedUsers.sort((a, b) => new Date(a.joined) - new Date(b.joined));
+                    break;
+                case 'docs-desc':
+                    sortedUsers.sort((a, b) => b.docs - a.docs);
+                    break;
+                case 'questions-desc':
+                    sortedUsers.sort((a, b) => b.questions - a.questions);
+                    break;
+                case 'quizzes-desc':
+                    sortedUsers.sort((a, b) => b.quizzes - a.quizzes);
+                    break;
+                case 'courses-desc':
+                    sortedUsers.sort((a, b) => b.courses - a.courses);
+                    break;
+                case 'status-active':
+                    sortedUsers.sort((a, b) => {
+                        const order = { 'Active': 0, 'Tried': 1, 'Inactive': 2 };
+                        return order[a.status] - order[b.status];
+                    });
+                    break;
+                case 'status-tried':
+                    sortedUsers.sort((a, b) => {
+                        const order = { 'Tried': 0, 'Active': 1, 'Inactive': 2 };
+                        return order[a.status] - order[b.status];
+                    });
+                    break;
+                case 'tier-pro':
+                    sortedUsers.sort((a, b) => {
+                        const order = { 'pro': 0, 'member': 1, 'explorer': 2 };
+                        return order[a.tier] - order[b.tier];
+                    });
+                    break;
+            }
+
+            tbody.innerHTML = sortedUsers.map(user => `
                 <tr>
                     <td>${user.email}</td>
                     <td><span class="status-badge tier-${user.tier}">${capitalize(user.tier)}</span></td>
