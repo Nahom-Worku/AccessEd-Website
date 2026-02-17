@@ -190,19 +190,164 @@
             height: 24px;
         }
 
-        .hero-image {
+        /* Screenshot Carousel */
+        .screenshot-carousel {
             margin-top: 60px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            position: relative;
+            max-width: 100%;
         }
 
-        .hero-image img {
-            max-width: 280px;
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            padding: 0 40px;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 20px 0;
+        }
+
+        .carousel-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        .carousel-track img {
+            flex-shrink: 0;
+            width: 260px;
             height: auto;
             border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            scroll-snap-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .carousel-track img:hover {
+            transform: scale(1.02);
+        }
+
+        /* Fade hints on edges */
+        .carousel-container::before,
+        .carousel-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 60px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .carousel-container::before {
+            left: 0;
+            background: linear-gradient(to right, var(--bg) 0%, transparent 100%);
+        }
+
+        .carousel-container::after {
+            right: 0;
+            background: linear-gradient(to left, var(--bg) 0%, transparent 100%);
+        }
+
+        /* Arrow buttons */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+            transition: all 0.2s ease;
+        }
+
+        .carousel-btn:hover {
+            background: var(--text);
+            border-color: var(--text);
+        }
+
+        .carousel-btn:hover svg {
+            stroke: white;
+        }
+
+        .carousel-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--text);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .carousel-btn.prev {
+            left: 0;
+        }
+
+        .carousel-btn.next {
+            right: 0;
+        }
+
+        /* Dot indicators */
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+
+        .carousel-dot.active {
+            background: var(--text);
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .carousel-dot:hover {
+            background: var(--text-secondary);
+        }
+
+        /* Scroll hint */
+        .scroll-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .scroll-hint svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
 
         /* Features Section */
@@ -405,8 +550,22 @@
                 font-size: 17px;
             }
 
-            .hero-image img {
-                max-width: 220px;
+            .carousel-track img {
+                width: 220px;
+            }
+
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .carousel-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .carousel-container {
+                padding: 0 30px;
             }
 
             .section-header h2 {
@@ -427,13 +586,21 @@
         }
 
         @media (max-width: 480px) {
-            .hero-image {
-                flex-direction: column;
-                align-items: center;
+            .carousel-track img {
+                width: 200px;
             }
 
-            .hero-image img {
-                max-width: 260px;
+            .carousel-btn {
+                width: 36px;
+                height: 36px;
+            }
+
+            .carousel-container {
+                padding: 0 24px;
+            }
+
+            .scroll-hint {
+                font-size: 12px;
             }
         }
     </style>
@@ -470,10 +637,32 @@
                 </svg>
                 Download for iOS
             </a>
-            <div class="hero-image">
-                <img src="Assets/chat with citation images.png" alt="AI Chat with Citations">
-                <img src="Assets/quiz session completed.png" alt="Quiz Session">
-                <img src="Assets/Courses tab.png" alt="Courses View">
+            <div class="screenshot-carousel">
+                <div class="carousel-container">
+                    <button class="carousel-btn prev" onclick="scrollCarousel(-1)" aria-label="Previous">
+                        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                    </button>
+                    <div class="carousel-track" id="carouselTrack">
+                        <img src="Assets/App screenshots/1 - Home page.png" alt="Home Dashboard">
+                        <img src="Assets/App screenshots/2 - AI Chat.png" alt="AI Chat">
+                        <img src="Assets/App screenshots/3 - Topic Mastery.png" alt="Topic Mastery">
+                        <img src="Assets/App screenshots/4 - Chat with Source thumbnails.png" alt="Chat with Citations">
+                        <img src="Assets/App screenshots/5 - On-device AI.png" alt="On-device AI">
+                        <img src="Assets/App screenshots/6 - Courses.png" alt="Courses">
+                        <img src="Assets/App screenshots/7 - Mistake Journal.png" alt="Mistake Journal">
+                        <img src="Assets/App screenshots/8 - Session complete.png" alt="Session Complete">
+                    </div>
+                    <button class="carousel-btn next" onclick="scrollCarousel(1)" aria-label="Next">
+                        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                </div>
+                <div class="carousel-dots" id="carouselDots"></div>
+                <div class="scroll-hint">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                    Swipe to explore
+                </div>
             </div>
         </div>
     </section>
@@ -585,5 +774,61 @@
             <p class="footer-copy">&copy; 2026 AccessEd. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        // Screenshot Carousel
+        const track = document.getElementById('carouselTrack');
+        const dotsContainer = document.getElementById('carouselDots');
+        const images = track.querySelectorAll('img');
+        const totalImages = images.length;
+        let currentIndex = 0;
+
+        // Create dots
+        for (let i = 0; i < totalImages; i++) {
+            const dot = document.createElement('button');
+            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('aria-label', `Go to screenshot ${i + 1}`);
+            dot.onclick = () => scrollToIndex(i);
+            dotsContainer.appendChild(dot);
+        }
+
+        // Scroll carousel
+        function scrollCarousel(direction) {
+            const imageWidth = images[0].offsetWidth + 20; // width + gap
+            currentIndex = Math.max(0, Math.min(currentIndex + direction, totalImages - 1));
+            track.scrollTo({ left: currentIndex * imageWidth, behavior: 'smooth' });
+            updateDots();
+        }
+
+        function scrollToIndex(index) {
+            const imageWidth = images[0].offsetWidth + 20;
+            currentIndex = index;
+            track.scrollTo({ left: index * imageWidth, behavior: 'smooth' });
+            updateDots();
+        }
+
+        function updateDots() {
+            const dots = dotsContainer.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        // Update dots on scroll
+        track.addEventListener('scroll', () => {
+            const imageWidth = images[0].offsetWidth + 20;
+            const newIndex = Math.round(track.scrollLeft / imageWidth);
+            if (newIndex !== currentIndex) {
+                currentIndex = newIndex;
+                updateDots();
+            }
+        });
+
+        // Hide scroll hint after first interaction
+        track.addEventListener('scroll', () => {
+            const hint = document.querySelector('.scroll-hint');
+            if (hint) hint.style.opacity = '0';
+        }, { once: true });
+    </script>
 </body>
 </html>
