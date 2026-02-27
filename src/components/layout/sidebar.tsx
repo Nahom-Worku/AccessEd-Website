@@ -11,6 +11,7 @@ import {
   Settings,
   Crown,
   Flame,
+  Shield,
 } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { useStreak } from '@/lib/hooks/use-engagement'
@@ -32,7 +33,7 @@ const bottomItems = [
 export function Sidebar() {
   const pathname = usePathname()
   const { data: streak } = useStreak()
-  const { tier } = useAuthStore()
+  const { tier, user } = useAuthStore()
 
   return (
     <aside className="hidden lg:flex flex-col w-64 border-r border-border bg-card h-screen sticky top-0">
@@ -74,6 +75,20 @@ export function Sidebar() {
       </nav>
 
       <div className="px-3 pb-4 space-y-1">
+        {user?.role === 'admin' && (
+          <Link
+            href="/admin"
+            className={cn(
+              'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+              pathname.startsWith('/admin')
+                ? 'bg-secondary text-foreground'
+                : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground',
+            )}
+          >
+            <Shield className="h-5 w-5" />
+            Admin
+          </Link>
+        )}
         {bottomItems.map((item) => {
           if (item.href === '/upgrade' && tier === 'pro') return null
           const isActive = pathname.startsWith(item.href)

@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { X, Home, BookOpen, MessageSquare, GraduationCap, BarChart3, Settings, Crown } from 'lucide-react'
+import { X, Home, BookOpen, MessageSquare, GraduationCap, BarChart3, Settings, Crown, Shield } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { useUIStore } from '@/lib/stores/ui-store'
 import { useAuthStore } from '@/lib/stores/auth-store'
@@ -20,7 +20,7 @@ const navItems = [
 export function MobileNav() {
   const pathname = usePathname()
   const { mobileNavOpen, setMobileNavOpen } = useUIStore()
-  const { tier } = useAuthStore()
+  const { tier, user } = useAuthStore()
 
   useEffect(() => {
     setMobileNavOpen(false)
@@ -70,6 +70,20 @@ export function MobileNav() {
             >
               <Crown className="h-5 w-5" />
               Upgrade to Pro
+            </Link>
+          )}
+          {user?.role === 'admin' && (
+            <Link
+              href="/admin"
+              className={cn(
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                pathname.startsWith('/admin')
+                  ? 'bg-secondary text-foreground'
+                  : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground',
+              )}
+            >
+              <Shield className="h-5 w-5" />
+              Admin
             </Link>
           )}
         </nav>
