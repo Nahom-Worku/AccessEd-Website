@@ -14,3 +14,15 @@
 
 # Netlify
 .netlify
+
+# Next.js
+.next/
+out/
+node_modules/
+
+# Environment
+.env*.local
+!.env.local.example
+
+# TypeScript
+next-env.d.ts
