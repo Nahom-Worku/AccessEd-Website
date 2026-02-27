@@ -1,13 +1,5 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/terms", "destination": "/terms/index.html" },
-    { "source": "/privacy", "destination": "/privacy/index.html" },
-    { "source": "/verify", "destination": "/verify/index.html" },
-    { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/admin/analytics", "destination": "/admin/analytics.html" }
-  ],
+  "framework": "nextjs",
   "headers": [
     {
       "source": "/(.*)",
