@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/shared/loading-skeleton'
+import { cn } from '@/lib/utils/cn'
 
 interface StatCardProps {
   icon: LucideIcon
@@ -8,11 +9,15 @@ interface StatCardProps {
   value: number | string | undefined
   label: string
   loading?: boolean
+  active?: boolean
 }
 
-export function StatCard({ icon: Icon, iconColor, value, label, loading }: StatCardProps) {
+export function StatCard({ icon: Icon, iconColor, value, label, loading, active }: StatCardProps) {
   return (
-    <Card>
+    <Card className={cn(
+      'transition-all hover:shadow-md cursor-pointer',
+      active && 'ring-2 ring-foreground/20',
+    )}>
       <CardContent className="p-4 text-center">
         <Icon className={`h-6 w-6 mx-auto mb-2 ${iconColor}`} />
         {loading ? (

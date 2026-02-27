@@ -1,18 +1,19 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { LayoutDashboard, Users, Megaphone, ArrowLeft } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
-  { href: '/admin/users', label: 'Users', icon: Users },
-  { href: '/admin/announcements', label: 'Announcements', icon: Megaphone },
+  { tab: 'overview', label: 'Dashboard', icon: LayoutDashboard },
+  { tab: 'users', label: 'Users', icon: Users },
+  { tab: 'announcements', label: 'Announcements', icon: Megaphone },
 ]
 
 export function AdminSidebar() {
-  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const activeTab = searchParams.get('tab') || 'overview'
 
   return (
     <aside className="hidden lg:flex flex-col w-64 border-r border-border bg-card h-screen sticky top-0">
@@ -30,13 +31,12 @@ export function AdminSidebar() {
 
       <nav className="flex-1 px-3 space-y-1">
         {navItems.map((item) => {
-          const isActive = item.exact
-            ? pathname === item.href
-            : pathname.startsWith(item.href)
+          const isActive = activeTab === item.tab
+          const href = item.tab === 'overview' ? '/admin' : `/admin?tab=${item.tab}`
           return (
             <Link
-              key={item.href}
-              href={item.href}
+              key={item.tab}
+              href={href}
               className={cn(
                 'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
                 isActive
