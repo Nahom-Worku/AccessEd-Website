@@ -5,6 +5,7 @@ import * as authApi from '@/lib/api/auth'
 import { useAuthStore } from '@/lib/stores/auth-store'
 import { setTokens, clearTokens, setStoredUser, getAccessToken } from '@/lib/utils/tokens'
 import type { LoginRequest, RegisterRequest } from '@/lib/types/auth'
+import { useEffect } from 'react'
 
 export function useUser() {
   const { isAuthenticated } = useAuthStore()
@@ -17,17 +18,42 @@ export function useUser() {
   })
 }
 
+export function useUsageStatus() {
+  const { isAuthenticated, setTier } = useAuthStore()
+
+  const query = useQuery({
+    queryKey: ['user', 'usage-status'],
+    queryFn: authApi.getUsageStatus,
+    enabled: isAuthenticated && !!getAccessToken(),
+    staleTime: 60 * 1000,
+  })
+
+  useEffect(() => {
+    if (query.data?.tier) {
+      setTier(query.data.tier)
+    }
+  }, [query.data?.tier, setTier])
+
+  return query
+}
+
 export function useLogin() {
   const queryClient = useQueryClient()
   const { setUser } = useAuthStore()
 
   return useMutation({
     mutationFn: (data: LoginRequest) => authApi.login(data),
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       setTokens(response.access_token, response.refresh_token)
       setStoredUser(response.user as unknown as Record<string, unknown>)
       setUser(response.user)
       queryClient.invalidateQueries({ queryKey: ['user'] })
+      try {
+        const status = await authApi.getUsageStatus()
+        useAuthStore.getState().setTier(status.tier)
+      } catch (err) {
+        console.error('[AccessEd] Failed to fetch tier after login:', err)
+      }
     },
   })
 }
@@ -38,11 +64,17 @@ export function useRegister() {
 
   return useMutation({
     mutationFn: (data: RegisterRequest) => authApi.register(data),
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       setTokens(response.access_token, response.refresh_token)
       setStoredUser(response.user as unknown as Record<string, unknown>)
       setUser(response.user)
       queryClient.invalidateQueries({ queryKey: ['user'] })
+      try {
+        const status = await authApi.getUsageStatus()
+        useAuthStore.getState().setTier(status.tier)
+      } catch (err) {
+        console.error('[AccessEd] Failed to fetch tier after register:', err)
+      }
     },
   })
 }
@@ -70,16 +102,5 @@ export function useForgotPassword() {
 export function useSendVerification() {
   return useMutation({
     mutationFn: authApi.sendVerification,
-  })
-}
-
-export function useUsageLimits() {
-  const { isAuthenticated } = useAuthStore()
-
-  return useQuery({
-    queryKey: ['user', 'usage-limits'],
-    queryFn: authApi.getUsageLimits,
-    enabled: isAuthenticated,
-    staleTime: 60 * 1000,
   })
 }

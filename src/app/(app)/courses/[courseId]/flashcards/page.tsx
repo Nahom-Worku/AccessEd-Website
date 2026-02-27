@@ -1,6 +1,6 @@
 'use client'
 
-import { use, useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, RotateCw, ThumbsDown, ThumbsUp, Lightbulb, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -14,8 +14,8 @@ import { cn } from '@/lib/utils/cn'
 import { toast } from 'sonner'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
-export default function FlashcardsPage({ params }: { params: Promise<{ courseId: string }> }) {
-  const { courseId } = use(params)
+export default function FlashcardsPage({ params }: { params: { courseId: string } }) {
+  const { courseId } = params
   const { data: course } = useCourse(courseId)
   const queryClient = useQueryClient()
   const [currentIndex, setCurrentIndex] = useState(0)

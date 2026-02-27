@@ -1,6 +1,6 @@
 'use client'
 
-import { use, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Loader2, Zap } from 'lucide-react'
@@ -14,8 +14,8 @@ import { generateQuiz } from '@/lib/api/quizzes'
 import type { Difficulty } from '@/lib/types/quiz'
 import { toast } from 'sonner'
 
-export default function QuizSetupPage({ params }: { params: Promise<{ courseId: string }> }) {
-  const { courseId } = use(params)
+export default function QuizSetupPage({ params }: { params: { courseId: string } }) {
+  const { courseId } = params
   const router = useRouter()
   const { data: course } = useCourse(courseId)
   const { startQuiz } = useQuizStore()

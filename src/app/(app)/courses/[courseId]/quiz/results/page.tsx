@@ -1,6 +1,6 @@
 'use client'
 
-import { use, useEffect } from 'react'
+import { useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Trophy, Target, ArrowLeft, RotateCcw, CheckCircle, XCircle } from 'lucide-react'
@@ -10,8 +10,8 @@ import { useQuizStore } from '@/lib/stores/quiz-store'
 import { formatPercentage } from '@/lib/utils/format'
 import { cn } from '@/lib/utils/cn'
 
-export default function QuizResultsPage({ params }: { params: Promise<{ courseId: string }> }) {
-  const { courseId } = use(params)
+export default function QuizResultsPage({ params }: { params: { courseId: string } }) {
+  const { courseId } = params
   const router = useRouter()
   const { results, questions, reset } = useQuizStore()
 

@@ -1,6 +1,5 @@
 'use client'
 
-import { use } from 'react'
 import Link from 'next/link'
 import {
   ArrowLeft, FileText, MessageSquare, ClipboardCheck, BookOpen, Trash2, Upload,
@@ -16,8 +15,8 @@ import { useDocuments, useDeleteDocument } from '@/lib/hooks/use-documents'
 import { formatDate, formatFileSize } from '@/lib/utils/format'
 import { toast } from 'sonner'
 
-export default function CourseDetailPage({ params }: { params: Promise<{ courseId: string }> }) {
-  const { courseId } = use(params)
+export default function CourseDetailPage({ params }: { params: { courseId: string } }) {
+  const { courseId } = params
   const { data: course, isLoading: courseLoading } = useCourse(courseId)
   const { data: docsData, isLoading: docsLoading, refetch: refetchDocs } = useDocuments(courseId)
   const deleteDoc = useDeleteDocument()

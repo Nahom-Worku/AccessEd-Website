@@ -1,6 +1,6 @@
 'use client'
 
-import { use, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -11,8 +11,8 @@ import { useDocument } from '@/lib/hooks/use-documents'
 import { viewDocumentPage } from '@/lib/api/documents'
 import { useQuery } from '@tanstack/react-query'
 
-export default function DocumentViewerPage({ params }: { params: Promise<{ courseId: string; documentId: string }> }) {
-  const { courseId, documentId } = use(params)
+export default function DocumentViewerPage({ params }: { params: { courseId: string; documentId: string } }) {
+  const { courseId, documentId } = params
   const { data: doc } = useDocument(documentId)
   const [currentPage, setCurrentPage] = useState(1)
 

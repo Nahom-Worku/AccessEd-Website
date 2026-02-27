@@ -35,14 +35,30 @@ export interface RefreshRequest {
   refresh_token: string
 }
 
-export interface UsageLimits {
-  documents_uploaded: number
+export interface UsageStatus {
+  tier: UserTier
+  tier_display: string
+  documents_used: number
   documents_limit: number
-  questions_asked: number
+  documents_remaining: number
+  questions_used: number
   questions_limit: number
-  quizzes_generated: number
+  questions_remaining: number
+  questions_period: string
+  questions_resets_in_hours: number
+  quizzes_used: number
   quizzes_limit: number
-  email_verified: boolean
+  quizzes_remaining: number
+  quizzes_period: string
+  quizzes_resets_in_hours: number
+  emergency_questions_used: number
+  emergency_questions_limit: number
+  emergency_questions_remaining: number
+  explorer_expires_in_hours: number
+  explorer_expires_formatted?: string
+  can_upgrade: boolean
+  upgrade_benefits: string[]
+  features: Record<string, boolean>
 }
 
 export type UserTier = 'explorer' | 'member' | 'pro'

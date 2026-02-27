@@ -1,5 +1,5 @@
 import { apiClient } from './client'
-import type { TokenResponse, LoginRequest, RegisterRequest, User, UsageLimits } from '@/lib/types/auth'
+import type { TokenResponse, LoginRequest, RegisterRequest, User, UsageStatus } from '@/lib/types/auth'
 
 export async function login(data: LoginRequest): Promise<TokenResponse> {
   return apiClient<TokenResponse>('/auth/login', {
@@ -69,6 +69,6 @@ export async function completeOnboarding(): Promise<{ success: boolean; message:
   return apiClient('/auth/complete-onboarding', { method: 'POST' })
 }
 
-export async function getUsageLimits(): Promise<UsageLimits> {
-  return apiClient<UsageLimits>('/auth/usage-limits')
+export async function getUsageStatus(): Promise<UsageStatus> {
+  return apiClient<UsageStatus>('/auth/usage-status')
 }

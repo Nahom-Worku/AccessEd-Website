@@ -1,6 +1,6 @@
 'use client'
 
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ChevronLeft, ChevronRight, CheckCircle, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -11,8 +11,8 @@ import { submitQuiz } from '@/lib/api/quizzes'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils/cn'
 
-export default function QuizTakingPage({ params }: { params: Promise<{ courseId: string; quizId: string }> }) {
-  const { courseId, quizId } = use(params)
+export default function QuizTakingPage({ params }: { params: { courseId: string; quizId: string } }) {
+  const { courseId, quizId } = params
   const router = useRouter()
   const {
     questions, currentIndex, answers, startTime, quizId: storeQuizId,
