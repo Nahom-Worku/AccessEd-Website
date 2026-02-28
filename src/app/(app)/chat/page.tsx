@@ -44,15 +44,17 @@ export default function ChatPage() {
       })
 
       for await (const event of stream) {
-        const e = event as StreamEvent
-        if (e.type === 'chunk' && e.text) {
-          fullContent += e.text
+        const e = event as unknown as Record<string, unknown>
+        if (e.type === 'content' && e.content) {
+          fullContent += e.content as string
           setStreamingContent(fullContent)
           scrollToBottom()
-        } else if (e.type === 'complete' && e.full_response) {
-          fullContent = e.full_response
+        } else if (e.type === 'metadata') {
+          // metadata event — streaming complete
+        } else if (e.type === 'done') {
+          // stream finished
         } else if (e.type === 'error') {
-          fullContent = e.message || 'An error occurred'
+          fullContent = (e.message as string) || 'An error occurred'
         }
       }
 
