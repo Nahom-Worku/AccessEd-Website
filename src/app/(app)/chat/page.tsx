@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useCallback, useMemo, useEffect } from 'react'
-import { Send, Loader2, BookOpen, FileText, X, ChevronLeft } from 'lucide-react'
+import { Send, Loader2, BookOpen, FileText, X, ChevronLeft, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCourses } from '@/lib/hooks/use-courses'
 import { useAuthStore } from '@/lib/stores/auth-store'
@@ -191,6 +191,118 @@ function SourceCards({
   )
 }
 
+// ─── Fullscreen Lightbox ─────────────────────────────────────────────
+
+function PageLightbox({
+  url,
+  pageNum,
+  onClose,
+}: {
+  url: string
+  pageNum: number
+  onClose: () => void
+}) {
+  const [scale, setScale] = useState(1)
+  const [translate, setTranslate] = useState({ x: 0, y: 0 })
+  const [dragging, setDragging] = useState(false)
+  const dragStart = useRef({ x: 0, y: 0 })
+  const translateStart = useRef({ x: 0, y: 0 })
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const zoomIn = () => setScale(s => Math.min(s + 0.25, 4))
+  const zoomOut = () => setScale(s => Math.max(s - 0.25, 0.5))
+  const resetZoom = () => { setScale(1); setTranslate({ x: 0, y: 0 }) }
+
+  // Scroll wheel zoom
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const handler = (e: WheelEvent) => {
+      e.preventDefault()
+      const delta = e.deltaY > 0 ? -0.1 : 0.1
+      setScale(s => Math.min(Math.max(s + delta, 0.5), 4))
+    }
+    el.addEventListener('wheel', handler, { passive: false })
+    return () => el.removeEventListener('wheel', handler)
+  }, [])
+
+  // Escape key to close
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [onClose])
+
+  // Drag to pan when zoomed
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (scale <= 1) return
+    setDragging(true)
+    dragStart.current = { x: e.clientX, y: e.clientY }
+    translateStart.current = { ...translate }
+    ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+  }
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragging) return
+    setTranslate({
+      x: translateStart.current.x + (e.clientX - dragStart.current.x),
+      y: translateStart.current.y + (e.clientY - dragStart.current.y),
+    })
+  }
+  const onPointerUp = () => setDragging(false)
+
+  return (
+    <div className="fixed inset-0 z-[100] flex flex-col bg-black/90 backdrop-blur-sm">
+      {/* Top bar */}
+      <div className="flex items-center justify-between px-4 py-3 shrink-0">
+        <span className="text-sm font-medium text-white/80">Page {pageNum}</span>
+        <div className="flex items-center gap-1">
+          <button onClick={zoomOut} className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors">
+            <ZoomOut className="h-4 w-4" />
+          </button>
+          <span className="text-xs text-white/60 min-w-[3rem] text-center">{Math.round(scale * 100)}%</span>
+          <button onClick={zoomIn} className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors">
+            <ZoomIn className="h-4 w-4" />
+          </button>
+          <button onClick={resetZoom} className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors">
+            <RotateCcw className="h-4 w-4" />
+          </button>
+          <div className="w-px h-5 bg-white/20 mx-1" />
+          <button onClick={onClose} className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors">
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Image area */}
+      <div
+        ref={containerRef}
+        className="flex-1 flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onClick={(e) => {
+          // Close on backdrop click (not on image)
+          if (e.target === e.currentTarget) onClose()
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={url}
+          alt={`Page ${pageNum}`}
+          className="max-h-[calc(100vh-5rem)] max-w-[90vw] object-contain rounded-lg shadow-2xl select-none"
+          style={{
+            transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
+            transition: dragging ? 'none' : 'transform 0.15s ease-out',
+          }}
+          draggable={false}
+        />
+      </div>
+    </div>
+  )
+}
+
 // ─── Page Viewer Panel ──────────────────────────────────────────────
 
 function PageViewerPanel({
@@ -203,6 +315,7 @@ function PageViewerPanel({
   highlightPage?: string
 }) {
   const highlightRef = useRef<HTMLDivElement>(null)
+  const [lightbox, setLightbox] = useState<{ url: string; pageNum: number } | null>(null)
 
   useEffect(() => {
     if (highlightRef.current) {
@@ -232,14 +345,16 @@ function PageViewerPanel({
             key={pageNum}
             ref={highlightPage === String(pageNum) ? highlightRef : undefined}
             className={cn(
-              'rounded-lg overflow-hidden border transition-all',
+              'rounded-lg overflow-hidden border transition-all cursor-pointer group',
               highlightPage === String(pageNum)
                 ? 'border-brand shadow-lg shadow-brand/10'
-                : 'border-border',
+                : 'border-border hover:border-brand/50',
             )}
+            onClick={() => setLightbox({ url, pageNum })}
           >
-            <div className="bg-secondary/50 px-3 py-1.5 text-xs font-medium text-muted-foreground">
-              Page {pageNum}
+            <div className="bg-secondary/50 px-3 py-1.5 text-xs font-medium text-muted-foreground flex items-center justify-between">
+              <span>Page {pageNum}</span>
+              <ZoomIn className="h-3 w-3 opacity-0 group-hover:opacity-60 transition-opacity" />
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -251,6 +366,15 @@ function PageViewerPanel({
           </div>
         ))}
       </div>
+
+      {/* Fullscreen lightbox */}
+      {lightbox && (
+        <PageLightbox
+          url={lightbox.url}
+          pageNum={lightbox.pageNum}
+          onClose={() => setLightbox(null)}
+        />
+      )}
     </div>
   )
 }
