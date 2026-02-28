@@ -9,6 +9,7 @@ import { askDocumentQuestionStream } from '@/lib/api/chat'
 import type { ChatMessage } from '@/lib/types/chat'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import remarkBreaks from 'remark-breaks'
 import { cn } from '@/lib/utils/cn'
 
 // ─── Types ──────────────────────────────────────────────────────────
@@ -63,6 +64,10 @@ function buildCitationLookup(citations?: CitationMeta) {
 
     if (pagesData.length > 0) {
       pageViewMap[String(idx)] = { docName: doc.document_name, pages: pagesData }
+      // For single-doc responses, citations use docIdx "0" — map that too
+      if (citations.is_single_document) {
+        pageViewMap['0'] = { docName: doc.document_name, pages: pagesData }
+      }
     }
   }
 
@@ -126,7 +131,7 @@ function CitedMarkdown({
   return (
     <div className="prose prose-sm dark:prose-invert max-w-none">
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={[remarkGfm, remarkBreaks]}
         components={{
           a: ({ href, children }) => {
             // Intercept citation links
@@ -522,7 +527,7 @@ export default function ChatPage() {
 
             {isStreaming && streamingContent && (
               <div className="prose prose-sm dark:prose-invert max-w-none">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{streamingContent}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{streamingContent}</ReactMarkdown>
               </div>
             )}
 
