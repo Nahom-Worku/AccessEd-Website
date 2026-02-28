@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef, useCallback, useMemo } from 'react'
-import { Send, Loader2, BookOpen, FileText, ExternalLink } from 'lucide-react'
+import { useState, useRef, useCallback, useMemo, useEffect } from 'react'
+import { Send, Loader2, BookOpen, FileText, X, ChevronLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCourses } from '@/lib/hooks/use-courses'
 import { useAuthStore } from '@/lib/stores/auth-store'
@@ -9,6 +9,9 @@ import { askDocumentQuestionStream } from '@/lib/api/chat'
 import type { ChatMessage } from '@/lib/types/chat'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { cn } from '@/lib/utils/cn'
+
+// ─── Types ──────────────────────────────────────────────────────────
 
 interface CitationDoc {
   document_id: string
@@ -28,56 +31,90 @@ interface MessageWithCitations extends ChatMessage {
   citations?: CitationMeta
 }
 
-// Build a lookup: { "1:2" => url, "1:5" => url } from citation metadata
-function buildPageUrlMap(citations?: CitationMeta): Record<string, string> {
-  if (!citations) return {}
-  const map: Record<string, string> = {}
+interface PageViewState {
+  docName: string
+  pages: { pageNum: number; url: string }[]
+}
+
+// ─── Helpers ────────────────────────────────────────────────────────
+
+function buildCitationLookup(citations?: CitationMeta) {
+  if (!citations) return { urlMap: {} as Record<string, string>, pageViewMap: {} as Record<string, PageViewState> }
+
+  const urlMap: Record<string, string> = {}
+  const pageViewMap: Record<string, PageViewState> = {}
+
   for (const doc of Object.values(citations.citations_by_document)) {
     const idx = doc.doc_index ?? 1
     const urls = doc.page_view_urls || {}
+
     for (const page of doc.pages) {
-      // Key: "docIndex:page" for multi-doc, or "0:page" for single-doc
-      map[`${idx}:${page}`] = urls[String(page)] || ''
-      // Also store single-doc key
+      urlMap[`${idx}:${page}`] = urls[String(page)] || ''
       if (citations.is_single_document) {
-        map[`0:${page}`] = urls[String(page)] || ''
+        urlMap[`0:${page}`] = urls[String(page)] || ''
       }
     }
+
+    // Build page view data keyed by "docIdx" for the panel
+    const pagesData = doc.pages.map(p => ({
+      pageNum: p,
+      url: urls[String(p)] || '',
+    })).filter(p => p.url)
+
+    if (pagesData.length > 0) {
+      pageViewMap[String(idx)] = { docName: doc.document_name, pages: pagesData }
+    }
   }
-  return map
+
+  return { urlMap, pageViewMap }
 }
 
-// Replace [1: p. 2] and [p. 2] with clickable links in text
-function CitedMarkdown({ content, urlMap }: { content: string; urlMap: Record<string, string> }) {
-  // Process the markdown to inject clickable citation links
+// Parse citation ref like "1:2" or "0:2" from the text pattern
+function parseCitationRef(match: string): { docIdx: string; page: string } | null {
+  // [1: p. 2] → docIdx=1, page=2
+  const multi = match.match(/\[(\d+):\s*p\.\s*(\d+)/)
+  if (multi) return { docIdx: multi[1], page: multi[2] }
+  // [p. 2] → docIdx=0 (single doc) or 1
+  const single = match.match(/\[p\.\s*(\d+)/)
+  if (single) return { docIdx: '0', page: single[1] }
+  return null
+}
+
+// ─── Citation-aware Markdown ────────────────────────────────────────
+
+function CitedMarkdown({
+  content,
+  urlMap,
+  onCitationClick,
+}: {
+  content: string
+  urlMap: Record<string, string>
+  onCitationClick: (docIdx: string, page: string) => void
+}) {
+  // Convert citation patterns to special marker links that we intercept
   const processed = useMemo(() => {
-    // Replace [N: p. X] or [N: p. X-Y] or [N: p. X, Y, Z] patterns
     let result = content
 
-    // Multi-doc: [1: p. 2] or [1: p. 2-5] or [1: p. 2, 3]
+    // Multi-doc: [1: p. 2]
     result = result.replace(
       /\[(\d+):\s*p\.\s*([\d\s,\-–]+)\]/g,
       (match, docIdx, pages) => {
-        const pageNums = pages.split(/[,\s]+/).map((p: string) => p.replace(/[-–].*/, '').trim()).filter(Boolean)
-        const firstPage = pageNums[0]
-        const url = urlMap[`${docIdx}:${firstPage}`]
-        if (url) {
-          return `[${match}](${url})`
+        const firstPage = pages.split(/[,\s]+/)[0]?.replace(/[-–].*/, '').trim()
+        if (urlMap[`${docIdx}:${firstPage}`]) {
+          return `[${match}](#cite-${docIdx}-${firstPage})`
         }
         return match
       },
     )
 
-    // Single-doc: [p. 2] or [p. 2-5] or [p. 2, 3]
+    // Single-doc: [p. 2]
     result = result.replace(
       /\[p\.\s*([\d\s,\-–]+)\]/g,
       (match, pages) => {
-        const pageNums = pages.split(/[,\s]+/).map((p: string) => p.replace(/[-–].*/, '').trim()).filter(Boolean)
-        const firstPage = pageNums[0]
-        // Try single-doc key first, then doc index 1
-        const url = urlMap[`0:${firstPage}`] || urlMap[`1:${firstPage}`]
-        if (url) {
-          return `[${match}](${url})`
+        const firstPage = pages.split(/[,\s]+/)[0]?.replace(/[-–].*/, '').trim()
+        const key = urlMap[`0:${firstPage}`] ? '0' : '1'
+        if (urlMap[`${key}:${firstPage}`]) {
+          return `[${match}](#cite-${key}-${firstPage})`
         }
         return match
       },
@@ -87,15 +124,31 @@ function CitedMarkdown({ content, urlMap }: { content: string; urlMap: Record<st
   }, [content, urlMap])
 
   return (
-    <div className="prose prose-sm dark:prose-invert max-w-none prose-a:text-brand prose-a:no-underline hover:prose-a:underline prose-a:font-semibold">
+    <div className="prose prose-sm dark:prose-invert max-w-none">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
-          a: ({ href, children }) => (
-            <a href={href} target="_blank" rel="noopener noreferrer" className="text-brand font-semibold hover:underline">
-              {children}
-            </a>
-          ),
+          a: ({ href, children }) => {
+            // Intercept citation links
+            if (href?.startsWith('#cite-')) {
+              const parts = href.replace('#cite-', '').split('-')
+              const docIdx = parts[0]
+              const page = parts[1]
+              return (
+                <button
+                  onClick={(e) => { e.preventDefault(); onCitationClick(docIdx, page) }}
+                  className="text-brand font-semibold hover:underline cursor-pointer"
+                >
+                  {children}
+                </button>
+              )
+            }
+            return (
+              <a href={href} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">
+                {children}
+              </a>
+            )
+          },
         }}
       >
         {processed}
@@ -104,37 +157,105 @@ function CitedMarkdown({ content, urlMap }: { content: string; urlMap: Record<st
   )
 }
 
-function SourceCards({ citations }: { citations: CitationMeta }) {
+// ─── Source Cards ────────────────────────────────────────────────────
+
+function SourceCards({
+  citations,
+  onSourceClick,
+}: {
+  citations: CitationMeta
+  onSourceClick: (docIdx: string) => void
+}) {
   const docs = Object.values(citations.citations_by_document)
   if (docs.length === 0) return null
 
   return (
-    <div className="mt-3 pt-3 border-t border-border/50">
-      <p className="text-xs font-medium text-muted-foreground mb-2">Sources</p>
+    <div className="mt-3 pt-3 border-t border-border/30">
+      <p className="text-[11px] font-medium text-muted-foreground mb-2 uppercase tracking-wider">Sources</p>
       <div className="flex flex-wrap gap-2">
-        {docs.map((doc) => {
-          const firstPageUrl = doc.page_view_urls?.[String(doc.pages[0])]
-          return (
-            <a
-              key={doc.document_id}
-              href={firstPageUrl || '#'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-secondary/80 transition-colors text-xs group"
-            >
-              <FileText className="h-3.5 w-3.5 text-muted-foreground" />
-              <span className="font-medium truncate max-w-[180px]">{doc.document_name}</span>
-              <span className="text-muted-foreground">
-                p. {doc.pages.join(', ')}
-              </span>
-              <ExternalLink className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-            </a>
-          )
-        })}
+        {docs.map((doc) => (
+          <button
+            key={doc.document_id}
+            onClick={() => onSourceClick(String(doc.doc_index ?? 1))}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border hover:bg-secondary/80 transition-colors text-xs group cursor-pointer"
+          >
+            <FileText className="h-3.5 w-3.5 text-brand" />
+            <span className="font-medium truncate max-w-[180px]">{doc.document_name}</span>
+            <span className="text-muted-foreground">
+              p. {doc.pages.join(', ')}
+            </span>
+          </button>
+        ))}
       </div>
     </div>
   )
 }
+
+// ─── Page Viewer Panel ──────────────────────────────────────────────
+
+function PageViewerPanel({
+  data,
+  onClose,
+  highlightPage,
+}: {
+  data: PageViewState
+  onClose: () => void
+  highlightPage?: string
+}) {
+  const highlightRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (highlightRef.current) {
+      highlightRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [highlightPage])
+
+  return (
+    <div className="h-full flex flex-col bg-card border-l border-border">
+      {/* Header */}
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0">
+        <button onClick={onClose} className="p-1 rounded-md hover:bg-secondary transition-colors lg:hidden">
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+        <FileText className="h-4 w-4 text-brand shrink-0" />
+        <span className="text-sm font-medium truncate">{data.docName}</span>
+        <div className="flex-1" />
+        <button onClick={onClose} className="p-1 rounded-md hover:bg-secondary transition-colors">
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+
+      {/* Pages */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {data.pages.map(({ pageNum, url }) => (
+          <div
+            key={pageNum}
+            ref={highlightPage === String(pageNum) ? highlightRef : undefined}
+            className={cn(
+              'rounded-lg overflow-hidden border transition-all',
+              highlightPage === String(pageNum)
+                ? 'border-brand shadow-lg shadow-brand/10'
+                : 'border-border',
+            )}
+          >
+            <div className="bg-secondary/50 px-3 py-1.5 text-xs font-medium text-muted-foreground">
+              Page {pageNum}
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={url}
+              alt={`Page ${pageNum}`}
+              className="w-full"
+              loading="lazy"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ─── Main Chat Page ─────────────────────────────────────────────────
 
 export default function ChatPage() {
   const { user } = useAuthStore()
@@ -144,11 +265,23 @@ export default function ChatPage() {
   const [input, setInput] = useState('')
   const [isStreaming, setIsStreaming] = useState(false)
   const [streamingContent, setStreamingContent] = useState('')
+  const [pageViewer, setPageViewer] = useState<{ data: PageViewState; highlightPage?: string } | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  // Keep a ref of the latest message citations for opening the panel
+  const latestCitationsRef = useRef<{ pageViewMap: Record<string, PageViewState> }>({ pageViewMap: {} })
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  const openPageViewer = useCallback((msgCitations: CitationMeta | undefined, docIdx: string, highlightPage?: string) => {
+    if (!msgCitations) return
+    const { pageViewMap } = buildCitationLookup(msgCitations)
+    const data = pageViewMap[docIdx]
+    if (data) {
+      setPageViewer({ data, highlightPage })
+    }
+  }, [])
 
   const handleSend = useCallback(async () => {
     if (!input.trim() || isStreaming || !user) return
@@ -185,11 +318,8 @@ export default function ChatPage() {
         }
       }
 
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: fullContent,
-        citations,
-      }])
+      const newMsg: MessageWithCitations = { role: 'assistant', content: fullContent, citations }
+      setMessages(prev => [...prev, newMsg])
       setStreamingContent('')
     } catch {
       setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, something went wrong. Please try again.' }])
@@ -200,102 +330,136 @@ export default function ChatPage() {
     }
   }, [input, isStreaming, user, selectedCourseId, messages])
 
+  const panelOpen = !!pageViewer
+
   return (
-    <div className="flex flex-col h-[calc(100vh-3.5rem)]">
-      {/* Course Selector */}
-      <div className="border-b border-border px-4 py-2 flex items-center gap-3">
-        <BookOpen className="h-4 w-4 text-muted-foreground" />
-        <select
-          value={selectedCourseId}
-          onChange={(e) => setSelectedCourseId(e.target.value)}
-          className="text-sm bg-transparent border-none outline-none text-foreground"
-        >
-          <option value="">All documents</option>
-          {courses?.map(c => (
-            <option key={c.id} value={c.id}>{c.name}</option>
-          ))}
-        </select>
-      </div>
+    <div className="flex h-[calc(100vh-3.5rem)]">
+      {/* Chat Column */}
+      <div className={cn('flex-1 flex flex-col min-w-0 transition-all', panelOpen && 'lg:mr-0')}>
+        {/* Course Selector */}
+        <div className="border-b border-border px-4 py-2 flex items-center gap-3 shrink-0">
+          <BookOpen className="h-4 w-4 text-muted-foreground" />
+          <select
+            value={selectedCourseId}
+            onChange={(e) => setSelectedCourseId(e.target.value)}
+            className="text-sm bg-transparent border-none outline-none text-foreground"
+          >
+            <option value="">All documents</option>
+            {courses?.map(c => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+        </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-auto p-4 space-y-4">
-        {messages.length === 0 && !isStreaming && (
-          <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-16 h-16 rounded-2xl bg-brand/10 flex items-center justify-center mb-4">
-              <Send className="h-8 w-8 text-brand" />
-            </div>
-            <h2 className="text-lg font-semibold mb-1">Ask anything about your documents</h2>
-            <p className="text-sm text-muted-foreground max-w-sm">
-              Get page-verified answers with citations. Select a course above to focus on specific documents.
-            </p>
-          </div>
-        )}
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
+            {messages.length === 0 && !isStreaming && (
+              <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+                <div className="w-14 h-14 rounded-2xl bg-brand/10 flex items-center justify-center mb-4">
+                  <Send className="h-7 w-7 text-brand" />
+                </div>
+                <h2 className="text-lg font-semibold mb-1">Ask anything about your documents</h2>
+                <p className="text-sm text-muted-foreground max-w-sm">
+                  Get page-verified answers with citations. Select a course above to focus on specific documents.
+                </p>
+              </div>
+            )}
 
-        {messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-              msg.role === 'user'
-                ? 'bg-foreground/80 text-background dark:bg-white dark:text-slate-900'
-                : 'bg-secondary'
-            }`}>
-              {msg.role === 'assistant' ? (
-                <>
+            {messages.map((msg, i) => {
+              if (msg.role === 'user') {
+                return (
+                  <div key={i} className="flex justify-end">
+                    <div className="max-w-[85%] rounded-2xl px-4 py-2.5 bg-foreground/80 text-background dark:bg-white dark:text-slate-900">
+                      <p className="text-sm">{msg.content}</p>
+                    </div>
+                  </div>
+                )
+              }
+
+              // Assistant message — no bubble, just clean content
+              const { urlMap } = buildCitationLookup(msg.citations)
+              return (
+                <div key={i} className="space-y-0">
                   <CitedMarkdown
                     content={msg.content}
-                    urlMap={buildPageUrlMap(msg.citations)}
+                    urlMap={urlMap}
+                    onCitationClick={(docIdx, page) => openPageViewer(msg.citations, docIdx, page)}
                   />
-                  {msg.citations && <SourceCards citations={msg.citations} />}
-                </>
-              ) : (
-                <p className="text-sm">{msg.content}</p>
-              )}
-            </div>
-          </div>
-        ))}
+                  {msg.citations && (
+                    <SourceCards
+                      citations={msg.citations}
+                      onSourceClick={(docIdx) => openPageViewer(msg.citations, docIdx)}
+                    />
+                  )}
+                </div>
+              )
+            })}
 
-        {isStreaming && streamingContent && (
-          <div className="flex justify-start">
-            <div className="max-w-[80%] rounded-2xl px-4 py-3 bg-secondary">
+            {isStreaming && streamingContent && (
               <div className="prose prose-sm dark:prose-invert max-w-none">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{streamingContent}</ReactMarkdown>
               </div>
+            )}
+
+            {isStreaming && !streamingContent && (
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm">Thinking...</span>
+              </div>
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+
+        {/* Input */}
+        <div className="shrink-0 border-t border-border bg-background">
+          <div className="max-w-3xl mx-auto px-4 py-4">
+            <div className="flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-1 focus-within:ring-2 focus-within:ring-ring transition-shadow">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() } }}
+                placeholder="Ask a question about your documents..."
+                className="flex-1 bg-transparent py-2.5 text-sm outline-none placeholder:text-muted-foreground"
+                disabled={isStreaming}
+              />
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={handleSend}
+                disabled={!input.trim() || isStreaming}
+                className="shrink-0 h-8 w-8 rounded-lg"
+              >
+                {isStreaming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              </Button>
             </div>
           </div>
-        )}
-
-        {isStreaming && !streamingContent && (
-          <div className="flex justify-start">
-            <div className="rounded-2xl px-4 py-3 bg-secondary">
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-            </div>
-          </div>
-        )}
-
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input */}
-      <div className="border-t border-border p-4">
-        <div className="flex items-center gap-2 max-w-3xl mx-auto">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() } }}
-            placeholder="Ask a question about your documents..."
-            className="flex-1 rounded-xl border border-border bg-card px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
-            disabled={isStreaming}
-          />
-          <Button
-            size="icon"
-            onClick={handleSend}
-            disabled={!input.trim() || isStreaming}
-            className="rounded-xl"
-          >
-            {isStreaming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-          </Button>
         </div>
       </div>
+
+      {/* Page Viewer Panel */}
+      {panelOpen && (
+        <>
+          {/* Mobile overlay */}
+          <div
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setPageViewer(null)}
+          />
+          <div className={cn(
+            'fixed right-0 top-0 bottom-0 z-50 w-[85vw] max-w-md',
+            'lg:relative lg:z-auto lg:w-[420px] lg:max-w-none lg:shrink-0',
+          )}>
+            <PageViewerPanel
+              data={pageViewer.data}
+              onClose={() => setPageViewer(null)}
+              highlightPage={pageViewer.highlightPage}
+            />
+          </div>
+        </>
+      )}
     </div>
   )
 }
