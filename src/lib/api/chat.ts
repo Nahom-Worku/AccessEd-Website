@@ -1,5 +1,8 @@
 import { apiClient, streamClient } from './client'
-import type { AskQuestionRequest, ContinueChatRequest, ChatResponse, DocumentAskRequest, StreamEvent } from '@/lib/types/chat'
+import type {
+  AskQuestionRequest, ContinueChatRequest, ChatResponse, DocumentAskRequest, StreamEvent,
+  ChatSession, ChatSessionDetail, CreateSessionRequest, AddMessagesRequest,
+} from '@/lib/types/chat'
 
 export async function askAboutQuestion(data: AskQuestionRequest): Promise<ChatResponse> {
   return apiClient<ChatResponse>('/ai/ask-about-question', {
@@ -45,4 +48,47 @@ export async function* askDocumentQuestionStream(data: DocumentAskRequest): Asyn
   for await (const event of streamClient('/documents/ask-stream', data)) {
     yield event as unknown as StreamEvent
   }
+}
+
+// ─── Chat Sessions ──────────────────────────────────────────────────
+
+export async function getChatSessions(params: {
+  course_id?: string
+  limit?: number
+  offset?: number
+} = {}): Promise<ChatSession[]> {
+  const searchParams = new URLSearchParams()
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined) searchParams.set(key, value.toString())
+  })
+  return apiClient<ChatSession[]>(`/chat/sessions?${searchParams}`)
+}
+
+export async function getChatSession(sessionId: string): Promise<ChatSessionDetail> {
+  return apiClient<ChatSessionDetail>(`/chat/sessions/${sessionId}`)
+}
+
+export async function createChatSession(data: CreateSessionRequest): Promise<ChatSession> {
+  return apiClient<ChatSession>('/chat/sessions', {
+    method: 'POST',
+    body: data,
+  })
+}
+
+export async function updateChatSession(sessionId: string, title: string): Promise<ChatSession> {
+  return apiClient<ChatSession>(`/chat/sessions/${sessionId}`, {
+    method: 'PATCH',
+    body: { title },
+  })
+}
+
+export async function deleteChatSession(sessionId: string): Promise<void> {
+  return apiClient(`/chat/sessions/${sessionId}`, { method: 'DELETE' })
+}
+
+export async function addSessionMessages(sessionId: string, data: AddMessagesRequest): Promise<void> {
+  return apiClient(`/chat/sessions/${sessionId}/messages`, {
+    method: 'POST',
+    body: data,
+  })
 }

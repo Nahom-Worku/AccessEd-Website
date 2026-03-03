@@ -2,9 +2,11 @@ import Link from 'next/link'
 import {
   FileText, Search, CheckCircle, Upload, FlaskConical, MessageSquare,
   ClipboardCheck, BarChart3, BookOpen, RefreshCw, Lock, Shield, Smartphone,
-  Trophy, Building2, Cpu, ArrowRight, ChevronLeft, ChevronRight,
+  Trophy, Building2, Cpu, ArrowRight, ChevronLeft, ChevronRight, Bell,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+
+const WEB_APP_COMING_SOON = true
 
 const APP_STORE_URL = 'https://apps.apple.com/us/app/accessed/id6758074938'
 
@@ -124,16 +126,25 @@ export default function LandingPage() {
             AccessEd
           </Link>
           <div className="flex items-center gap-3">
-            <Link href="/login">
-              <Button variant="ghost" className="text-sm font-semibold">
-                Sign in
-              </Button>
-            </Link>
-            <Link href="/register">
-              <Button className="bg-[#111] text-white hover:bg-[#333] rounded-xl px-5">
-                Get started
-              </Button>
-            </Link>
+            {WEB_APP_COMING_SOON ? (
+              <div className="flex items-center gap-2 text-sm font-medium text-[#888]">
+                <Bell className="h-4 w-4" />
+                Web app coming soon
+              </div>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost" className="text-sm font-semibold">
+                    Sign in
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button className="bg-[#111] text-white hover:bg-[#333] rounded-xl px-5">
+                    Get started
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -156,17 +167,33 @@ export default function LandingPage() {
             Built by an <strong className="text-[#555]">Apple Swift Student Challenge Distinguished Winner</strong>.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/register">
-              <Button size="xl" className="bg-[#111] text-white hover:bg-[#333] rounded-2xl px-10 py-5 text-[17px] font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
-                <ArrowRight className="h-5 w-5 mr-2" />
-                Try the Web App
-              </Button>
-            </Link>
-            <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="xl" className="rounded-2xl px-10 py-5 text-[17px] font-semibold">
-                Download for iOS
-              </Button>
-            </a>
+            {WEB_APP_COMING_SOON ? (
+              <>
+                <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer">
+                  <Button size="xl" className="bg-[#111] text-white hover:bg-[#333] rounded-2xl px-10 py-5 text-[17px] font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
+                    <ArrowRight className="h-5 w-5 mr-2" />
+                    Download for iOS
+                  </Button>
+                </a>
+                <Button size="xl" variant="outline" className="rounded-2xl px-10 py-5 text-[17px] font-semibold opacity-60 cursor-default" disabled>
+                  Web App Coming Soon
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link href="/register">
+                  <Button size="xl" className="bg-[#111] text-white hover:bg-[#333] rounded-2xl px-10 py-5 text-[17px] font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
+                    <ArrowRight className="h-5 w-5 mr-2" />
+                    Try the Web App
+                  </Button>
+                </Link>
+                <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="xl" className="rounded-2xl px-10 py-5 text-[17px] font-semibold">
+                    Download for iOS
+                  </Button>
+                </a>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -358,19 +385,39 @@ export default function LandingPage() {
             Upload your first document and see the difference a real learning system makes.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/register">
-              <Button size="xl" className="bg-[#111] text-white hover:bg-[#333] rounded-2xl px-10 py-5 text-[17px] font-semibold shadow-lg">
-                <ArrowRight className="h-5 w-5 mr-2" />
-                Get Started Free
-              </Button>
-            </Link>
-            <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="xl" className="rounded-2xl px-10 py-5 text-[17px] font-semibold">
-                Download for iOS
-              </Button>
-            </a>
+            {WEB_APP_COMING_SOON ? (
+              <>
+                <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer">
+                  <Button size="xl" className="bg-[#111] text-white hover:bg-[#333] rounded-2xl px-10 py-5 text-[17px] font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
+                    <ArrowRight className="h-5 w-5 mr-2" />
+                    Download for iOS
+                  </Button>
+                </a>
+                <Button size="xl" variant="outline" className="rounded-2xl px-10 py-5 text-[17px] font-semibold opacity-60 cursor-default" disabled>
+                  Web App Coming Soon
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link href="/register">
+                  <Button size="xl" className="bg-[#111] text-white hover:bg-[#333] rounded-2xl px-10 py-5 text-[17px] font-semibold shadow-lg">
+                    <ArrowRight className="h-5 w-5 mr-2" />
+                    Get Started Free
+                  </Button>
+                </Link>
+                <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="xl" className="rounded-2xl px-10 py-5 text-[17px] font-semibold">
+                    Download for iOS
+                  </Button>
+                </a>
+              </>
+            )}
           </div>
-          <p className="text-sm text-[#888] mt-6">Free to start. No credit card required.</p>
+          <p className="text-sm text-[#888] mt-6">
+            {WEB_APP_COMING_SOON
+              ? 'Available now on iOS. Web app launching soon.'
+              : 'Free to start. No credit card required.'}
+          </p>
         </div>
       </section>
 
@@ -378,9 +425,9 @@ export default function LandingPage() {
       <footer className="py-10 border-t border-[#E8E8E5]">
         <div className="max-w-[1120px] mx-auto px-8 text-center">
           <div className="flex justify-center gap-8 mb-4">
-            <Link href="/terms" className="text-sm text-[#888] hover:text-[#111]">Terms of Service</Link>
-            <Link href="/privacy" className="text-sm text-[#888] hover:text-[#111]">Privacy Policy</Link>
-            <Link href="/support" className="text-sm text-[#888] hover:text-[#111]">Support</Link>
+            <a href="/terms" className="text-sm text-[#888] hover:text-[#111]">Terms of Service</a>
+            <a href="/privacy" className="text-sm text-[#888] hover:text-[#111]">Privacy Policy</a>
+            <a href="/support" className="text-sm text-[#888] hover:text-[#111]">Support</a>
           </div>
           <p className="text-xs text-[#BBB]">&copy; 2026 AccessEd. All rights reserved.</p>
         </div>

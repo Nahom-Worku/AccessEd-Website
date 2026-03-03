@@ -56,6 +56,7 @@ export interface DocumentAskRequest {
   course_id?: string
   document_id?: string
   history?: ChatMessage[]
+  session_id?: string
 }
 
 export type StreamEventType = 'start' | 'chunk' | 'citation' | 'complete' | 'error'
@@ -69,4 +70,42 @@ export interface StreamEvent {
   page?: number
   excerpt?: string
   full_response?: string
+}
+
+// ─── Chat Sessions ──────────────────────────────────────────────────
+
+export interface ChatSession {
+  id: string
+  title: string
+  course_id?: string
+  course_name?: string
+  created_at: string
+  updated_at: string
+  message_count: number
+  last_message_preview?: string
+}
+
+export interface ChatSessionDetail extends ChatSession {
+  messages: ChatSessionMessage[]
+}
+
+export interface ChatSessionMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  created_at: string
+  metadata?: Record<string, unknown>
+}
+
+export interface CreateSessionRequest {
+  title?: string
+  course_id?: string
+}
+
+export interface AddMessagesRequest {
+  messages: {
+    role: 'user' | 'assistant'
+    content: string
+    metadata?: Record<string, unknown>
+  }[]
 }
